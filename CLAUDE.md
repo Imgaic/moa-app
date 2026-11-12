@@ -8,7 +8,9 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 
 ## 스택
 - Expo SDK 58, React Native, TypeScript, Expo Router (`src/app/`)
-- 예정(아직 설치 안 함): NativeWind, Zustand, `@mj-studio/react-native-naver-map`, `expo-calendar`
+- 스타일: NativeWind v4 (Tailwind CSS v3, `className`). 설정은 `tailwind.config.js`, `src/global.css`
+- 상태 관리: Zustand
+- 예정(아직 설치 안 함): `@mj-studio/react-native-naver-map`, `expo-calendar`
 - 게스트용 무가입 웹 링크는 Expo Web으로 만든다
 - 미결정: 길찾기 API, 실시간 반영 방식, 게스트 인증 방식. 결정된 것처럼 코드에 전제하지 말고 먼저 물어본다.
 
