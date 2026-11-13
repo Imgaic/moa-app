@@ -19,7 +19,10 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 - `src/components/`: 재사용 UI 컴포넌트. `src/components/ui/`: 버튼, 입력처럼 디자인 시스템 단위 컴포넌트
 - `src/hooks/`: 커스텀 훅
 - `src/constants/`: 테마, 상수
-- 순수 로직(빈 시간 계산 등)은 UI와 분리해 테스트할 수 있게 둔다. 위치는 처음 만들 때 정한다.
+- `src/lib/`: 순수 로직(빈 시간 계산, 달력 칸 계산 등). UI와 분리해 테스트한다. 테스트 파일은 옆에 `*.test.ts`로 둔다.
+- `src/stores/`: Zustand 스토어
+- `src/api/`: 서버 호출. 백엔드가 나오기 전까지는 `src/mocks/`의 가짜 데이터를 돌려준다.
+- `src/mocks/`: 가짜 데이터
 
 ## 작업 방식
 - **브랜치:** 기능 하나에 브랜치 하나(`feat/time-grid`, `fix/...`)로 작업하고, 끝나면 PR로 main에 합친다. main에 직접 커밋하지 않는다. **git worktree는 쓰지 않는다**(Expo는 복사본마다 설치와 빌드를 다시 해야 해서 무겁다).
