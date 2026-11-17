@@ -52,4 +52,4 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | Button/Social | `src/components/ui/SocialButton.tsx` | 2026-11-17 | Kakao / Google / Naver / Apple |
 | Input/Toggle | `src/components/ui/Toggle.tsx` | 2026-11-17 | Off / On |
 | Input/Checkbox | `src/components/ui/Checkbox.tsx` | 2026-11-18 | 피그마 State의 Off = checked false, On = tone blue, On-black = tone black. Empty는 만들지 않기로 함 |
-| Input/Text | `src/components/ui/TextField.tsx` | 2026-11-17 | Empty / Filled, 라벨, 도움말, 글자 수, 확인 버튼 |
+| Input/Text | `src/components/ui/TextField.tsx` | 2026-11-18 | Empty / Filled(글자 크기는 값 유무로), 라벨, 도움말, 글자 수, 확인 버튼. 파란 밑줄은 포커스 표시(피그마에 포커스 상태 없음) |
