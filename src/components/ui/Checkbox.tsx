@@ -3,20 +3,28 @@ import { Path } from 'react-native-svg';
 
 import { Svg } from './Svg';
 
-// 피그마 Input/Checkbox (2026-11-17 기준). 디자인이 완성 전이라 수치가 바뀔 수 있다.
-// 피그마의 Empty 변형(테두리만 있는 빈 원)은 용도가 확인되지 않아 만들지 않았다.
+// 피그마 Input/Checkbox (2026-11-18 기준). 디자인이 완성 전이라 수치가 바뀔 수 있다.
+// 피그마 State 대응: Off = checked false(두 톤 공통), On = tone blue, On-black = tone black.
+// Empty(테두리만 있는 빈 원)는 만들지 않기로 했다.
 const SIZE = 30;
 const CHECK_STROKE_WIDTH = 1.5;
 const HIT_SLOP = 8;
 
+const ON_BG = { blue: 'bg-blue-50', black: 'bg-black' } as const;
+
 type CheckboxProps = {
   checked: boolean;
   onChange: (checked: boolean) => void;
+  tone?: keyof typeof ON_BG;
   accessibilityLabel?: string;
 };
 
-// 상태: Off(회색, 선택 안 함) / On(파랑, 선택함)
-export function Checkbox({ checked, onChange, accessibilityLabel }: CheckboxProps) {
+export function Checkbox({
+  checked,
+  onChange,
+  tone = 'blue',
+  accessibilityLabel,
+}: CheckboxProps) {
   return (
     <Pressable
       accessibilityRole="checkbox"
@@ -24,7 +32,7 @@ export function Checkbox({ checked, onChange, accessibilityLabel }: CheckboxProp
       accessibilityState={{ checked }}
       hitSlop={HIT_SLOP}
       onPress={() => onChange(!checked)}
-      className={`items-center justify-center rounded-full ${checked ? 'bg-blue-50' : 'bg-gray-20'}`}
+      className={`items-center justify-center rounded-full ${checked ? ON_BG[tone] : 'bg-gray-20'}`}
       style={{ width: SIZE, height: SIZE }}>
       <Svg width={SIZE} height={SIZE} viewBox="0 0 30 30" className="text-white">
         <Path

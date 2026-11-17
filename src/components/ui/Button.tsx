@@ -23,7 +23,7 @@ export function Button({ label, onPress, disabled = false }: ButtonProps) {
         const color = !disabled && pressed ? 'text-gray-30' : 'text-white';
         return (
           <View className={`${BOX} ${bg}`}>
-            <Text className={`font-pretendard text-body1 ${color}`}>{label}</Text>
+            <Text className={`font-pretendard text-body1 font-bold ${color}`}>{label}</Text>
           </View>
         );
       }}

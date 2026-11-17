@@ -44,7 +44,7 @@ export function SocialButton({ provider, onPress }: SocialButtonProps) {
         style={{ left: ICON_LEFT[provider] }}>
         <Logo provider={provider} />
       </View>
-      <Text className={`font-pretendard text-body1 ${look.text}`}>{look.label}</Text>
+      <Text className={`font-pretendard text-body1 font-bold ${look.text}`}>{look.label}</Text>
     </Pressable>
   );
 }
@@ -54,7 +54,7 @@ function Logo({ provider }: { provider: SocialProvider }) {
   switch (provider) {
     case 'kakao':
       return (
-        <Svg width={ICON_SIZE} height={ICON_SIZE} viewBox="0 0 40 40" className="text-gray-60">
+        <Svg width={ICON_SIZE} height={ICON_SIZE} viewBox="0 0 40 40" className="text-kakao-logo">
           <Path
             fill="currentColor"
             d="M20.0012 10C14.4764 10 10 13.8303 10 18.5548C10 21.5915 11.8516 24.2597 14.6416 25.7768L13.6982 29.5883C13.6632 29.7021 13.6906 29.824 13.7658 29.908C13.8208 29.9676 13.8958 30 13.9684 30C14.031 30 14.0936 29.9784 14.146 29.9322L18.1996 26.9687C18.7827 27.0581 19.3832 27.1069 19.9987 27.1069C25.5211 27.1069 30 23.2764 30 18.552C30 13.8277 25.5236 10 20.0012 10Z"

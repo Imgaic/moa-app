@@ -25,6 +25,7 @@ const colors = [
   ['red', 'bg-red', '#AF2E36'],
   ['yellow', 'bg-yellow', '#EDC112'],
   ['kakao', 'bg-kakao', '#FEE500'],
+  ['kakao-logo', 'bg-kakao-logo', '#191919'],
   ['naver', 'bg-naver', '#03A94D'],
   ['google', 'bg-google', '#FFFFFF'],
 ] as const;
@@ -47,6 +48,8 @@ export default function TokenSamples() {
   const [toggleOn, setToggleOn] = useState(true);
   const [checkOff, setCheckOff] = useState(false);
   const [checkOn, setCheckOn] = useState(true);
+  const [blackOff, setBlackOff] = useState(false);
+  const [blackOn, setBlackOn] = useState(true);
   const [name, setName] = useState('나해진');
   const [groupName, setGroupName] = useState('');
   const [labeled, setLabeled] = useState('');
@@ -95,10 +98,17 @@ export default function TokenSamples() {
           </View>
         </Section>
 
-        <Section title="Checkbox (Off, On)">
+        <Section title="Checkbox (Off, On / tone black: Off, On-black)">
           <View className="flex-row gap-6">
             <Checkbox checked={checkOff} onChange={setCheckOff} accessibilityLabel="견본 1" />
             <Checkbox checked={checkOn} onChange={setCheckOn} accessibilityLabel="견본 2" />
+            <Checkbox
+              checked={blackOff}
+              onChange={setBlackOff}
+              tone="black"
+              accessibilityLabel="견본 3"
+            />
+            <Checkbox checked={blackOn} onChange={setBlackOn} tone="black" accessibilityLabel="견본 4" />
           </View>
         </Section>
 
