@@ -46,6 +46,10 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 ## 피그마 ↔ 코드 컴포넌트 대응표
 피그마 컴포넌트를 구현하면 여기에 한 줄 추가한다. 이미 있는 컴포넌트는 새로 만들지 말고 재사용한다.
 
-| 피그마 컴포넌트 | 코드 경로 | 비고 |
-|---|---|---|
-| (아직 없음) | | |
+| 피그마 컴포넌트 | 코드 경로 | 기준일 | 비고 |
+|---|---|---|---|
+| Button/Primary | `src/components/ui/Button.tsx` | 2026-11-17 | Default / Pressed / Disabled, 라벨은 props |
+| Button/Social | `src/components/ui/SocialButton.tsx` | 2026-11-17 | Kakao / Google / Naver / Apple |
+| Input/Toggle | `src/components/ui/Toggle.tsx` | 2026-11-17 | Off / On |
+| Input/Checkbox | `src/components/ui/Checkbox.tsx` | 2026-11-17 | Off / On. Empty 변형은 용도 확인 필요, 미구현 |
+| Input/Text | `src/components/ui/TextField.tsx` | 2026-11-17 | Empty / Filled, 라벨, 도움말, 글자 수, 확인 버튼 |
