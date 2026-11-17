@@ -4,26 +4,24 @@ module.exports = {
   presets: [require('nativewind/preset')],
   theme: {
     extend: {
-      // docs/architecture.md 6.1 (피그마 변수)
+      // 피그마 최종UI의 Foundation (2026-11-17 기준). 디자인이 완성 전이라 값이 바뀔 수 있다.
       colors: {
-        navy: {
-          10: '#D3D6E1',
-          20: '#98A0BB',
-          30: '#57679B',
-          40: '#3B4E8D',
-          50: '#1B2F73',
-          60: '#000943',
-        },
         gray: {
-          10: '#F7F7F8',
+          10: '#F1F1F1',
           20: '#DEDEDE',
-          30: '#ABAFBC',
-          40: '#535A68',
-          50: '#111111',
+          30: '#ADADAD',
+          40: '#6B6B6B',
+          50: '#303030',
+          60: '#1C1C1C',
+        },
+        blue: {
+          10: '#E6EFFF',
+          30: '#8DB9FF',
+          40: '#4E93FF',
+          50: '#0063FF',
         },
         white: '#FFFFFF',
         black: '#000000',
-        blue: '#2F80FF',
         red: '#AF2E36',
         yellow: '#EDC112',
         kakao: '#FEE500',
@@ -33,11 +31,11 @@ module.exports = {
       fontFamily: {
         pretendard: ['Pretendard'],
       },
-      // docs/architecture.md 6.2 (피그마 글자 스타일). [크기, 줄 높이]
+      // 피그마 최종UI의 Foundation 글자 스타일 (2026-11-17 기준). [크기, 줄 높이]
       // 줄 높이는 크기 × 1.2를 올림한 값이다. 피그마는 100%지만 iOS에서 1.0은 악센트(Á)가 잘리고 1.1~1.15는 위쪽 경계에 닿았다.
       fontSize: {
         h1: ['32px', { lineHeight: '39px' }],
-        h2: ['26px', { lineHeight: '32px' }],
+        h2: ['28px', { lineHeight: '34px' }],
         h3: ['24px', { lineHeight: '29px' }],
         h4: ['20px', { lineHeight: '24px' }],
         body1: ['18px', { lineHeight: '22px' }],
