@@ -406,6 +406,8 @@ type Midpoint = {
 
 ## 6. 디자인 토큰
 
+> **2026-11-17 변경:** 6.1과 6.2의 값은 예전 피그마의 것이다. 지금 값은 `tailwind.config.js`가 기준이다(피그마 `최종UI`의 Foundation). Navy가 빠졌고 Gray는 6단계, Blue는 4단계가 됐으며 H2는 28이다.
+
 ### 6.1 색 (피그마 변수 → `tailwind.config.js`의 `theme.extend.colors`)
 
 | 피그마 변수 | 값 | Tailwind 이름 | 쓰는 예 |
