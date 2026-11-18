@@ -3,16 +3,21 @@ import { useState, type ReactNode } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { ActionCard } from '@/components/ui/ActionCard';
 import { Avatar } from '@/components/ui/Avatar';
 import { ProgressBadge, Tooltip } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { CheckedAvatar } from '@/components/ui/CheckedAvatar';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { DoneIllustration, Icon, type IconName } from '@/components/ui/Icon';
 import { InputField, InputFieldGroup } from '@/components/ui/InputField';
+import { MemberRow } from '@/components/ui/MemberRow';
 import { OptionCard } from '@/components/ui/OptionCard';
 import { PageTitle } from '@/components/ui/PageTitle';
+import { PlaceListCard } from '@/components/ui/PlaceListCard';
 import { PlaceRow } from '@/components/ui/PlaceRow';
 import { RangeCalendar } from '@/components/ui/RangeCalendar';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 import { SocialButton } from '@/components/ui/SocialButton';
 import { SummaryItem } from '@/components/ui/SummaryItem';
 import { TabBar, TabItem, type TabIcon } from '@/components/ui/TabBar';
@@ -299,6 +304,41 @@ export default function TokenSamples() {
             />
             <PlaceRow type="search" label="장소 찾기" onPress={() => undefined} />
           </View>
+        </Section>
+
+        <Section title="Character + 체크 (Checked, Unchecked, 사진 · 지름 48, 50)">
+          <View className="flex-row items-center gap-3">
+            <CheckedAvatar name="김태혁" size={48} checked />
+            <CheckedAvatar name="성예희" size={48} checked={false} />
+            <CheckedAvatar name="나해진" photo={samplePhoto} size={50} checked />
+          </View>
+        </Section>
+
+        <Section title="List/Member Row (입력 완료, 입력 중)">
+          <View className="gap-[8px] bg-white p-4">
+            <MemberRow name="김태혁" status="입력 완료" checked />
+            <MemberRow name="성예희" status="입력 중" checked={false} />
+          </View>
+        </Section>
+
+        <Section title={`List/Action Card · Section/Header · 누른 횟수 ${pressCount}`}>
+          <ActionCard label="가능한 일정 입력하러 가기" onPress={() => setPressCount((n) => n + 1)} />
+          <SectionHeader
+            title="제안된 장소"
+            actionLabel="장소 제안"
+            onAction={() => setPressCount((n) => n + 1)}
+          />
+        </Section>
+
+        <Section title="Card/Place List (한 줄, 여러 줄)">
+          <PlaceListCard items={[{ id: '1', name: '홍대역', detail: '태혁 제안' }]} />
+          <PlaceListCard
+            items={[
+              { id: '1', name: '홍대역', detail: '태혁 제안' },
+              { id: '2', name: '사당역', detail: '예희 제안' },
+              { id: '3', name: '아주 긴 장소 이름이 들어가면 줄이 어떻게 되는지', detail: '해진 제안' },
+            ]}
+          />
         </Section>
 
         <Section title="Calendar/Range · 시작, 끝, 다시 누르기, 달 넘기기">
