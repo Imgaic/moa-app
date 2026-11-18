@@ -1,7 +1,7 @@
 import { Pressable, Text, View } from 'react-native';
 import { Line, Path } from 'react-native-svg';
 
-import { AvatarCircle } from '@/components/ui/Avatar';
+import { Avatar } from '@/components/ui/Avatar';
 import { Icon } from '@/components/ui/Icon';
 import { Svg } from '@/components/ui/Svg';
 import { longDateText, timeText } from '@/lib/dateText';
@@ -125,7 +125,7 @@ export function TodayCard({ plan, now, onPress }: TodayCardProps) {
         className="absolute flex-row items-center"
         style={{ left: FACES.left, top: FACES.top, gap: FACES.gap }}>
         {faces.map((m) => (
-          <AvatarCircle
+          <Avatar
             key={m.id}
             name={m.name}
             photo={m.avatarUrl ? { uri: m.avatarUrl } : undefined}

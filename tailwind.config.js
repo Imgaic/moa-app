@@ -2,6 +2,9 @@
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   presets: [require('nativewind/preset')],
+  // 기본값 'media'면 웹에서 NativeWind가 스스로 colorScheme.set을 불러 오류를 던진다
+  // (react-native-css-interop runtime/web/color-scheme.js). 아직 라이트 모드만 쓰고 dark: 클래스도 없다.
+  darkMode: 'class',
   theme: {
     extend: {
       // 피그마 최종UI의 Foundation (2026-11-17 기준). 디자인이 완성 전이라 값이 바뀔 수 있다.

@@ -58,14 +58,14 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | 피그마 컴포넌트 | 코드 경로 | 기준일 | 비고 |
 |---|---|---|---|
 | Button/Primary | `src/components/ui/Button.tsx` | 2026-11-17 | Default / Pressed / Disabled, 라벨은 props |
-| Button/Social | `src/components/ui/SocialButton.tsx` | 2026-11-17 | Kakao / Google / Naver / Apple |
+| Button/Social | `src/components/ui/SocialButton.tsx` | 2026-11-17 | Kakao / Google / Naver / Apple. 로고 그림은 `src/components/ui/SocialLogo.tsx` |
 | Input/Toggle | `src/components/ui/Toggle.tsx` | 2026-11-17 | Off / On. 전환은 200ms(손잡이 이동 + 바탕 페이드) |
 | Input/Checkbox | `src/components/ui/Checkbox.tsx` | 2026-11-18 | 피그마 State의 Off = checked false, On = tone blue, On-black = tone black. Empty는 만들지 않기로 함 |
 | Input/Text | `src/components/ui/TextField.tsx` | 2026-11-18 | Empty / Filled(글자 크기는 값 유무로), 라벨, 도움말, 글자 수, 확인 버튼. 파란 밑줄은 포커스 표시(피그마에 포커스 상태 없음), 200ms 페이드 |
 | Icon (icon/*, Illustration/Done) | `src/components/ui/Icon.tsx` | 2026-11-18 | `Icon` name 하나로 전부. 색은 className 글자색 토큰. 탭 아이콘은 home/calendar/user와 `-fill`. `DoneIllustration`은 140 고정. 홈 카드 안의 채운 핀은 `pin-fill` |
 | Navigation/Top Bar | `src/components/ui/TopBar.tsx` | 2026-11-18 | Type 6개(status/step/back/share/largeTitle/stepTitle). 상태 표시줄은 safe area로 대신 |
 | Navigation/Tab Bar, Navigation/Tab Item | `src/components/ui/TabBar.tsx` | 2026-11-18 | `TabBar`(children) + `TabItem`(icon, selected). 선택 전환은 180ms 페이드. 라우터 연결 없음 |
-| Avatar, Avatar/Member, Avatar/Group, Avatar/Map Pin | `src/components/ui/Avatar.tsx` | 2026-11-18 | `ProfileAvatar` / `MemberAvatar` / `GroupAvatar` / `MapPinAvatar`. 사진이 없으면 이름 뒤 두 글자(`src/lib/avatarText.ts`). Character 세트는 만들지 않음 |
+| Avatar | `src/components/ui/Avatar.tsx` | 2026-11-18 | 프로필 동그라미 하나(`Avatar`: name, photo, size, 테두리). 사진이 없으면 이름 뒤 두 글자(`src/lib/avatarText.ts`). 카메라 버튼, Avatar/Member, Avatar/Group, Avatar/Map Pin은 쓰는 화면이 없어 지움(쓰일 때 `Avatar`를 쓰는 별도 컴포넌트로). Character 세트는 만들지 않음 |
 | Tooltip/Recent, Badge/Progress | `src/components/ui/Badge.tsx` | 2026-11-18 | `Tooltip`(label), `ProgressBadge`(count, label) |
 | Card/Plan | `src/components/home/PlanCard.tsx` | 2026-11-18 | `plan`, `now`, `onPress`. 라벨은 `src/lib/planLabel.ts`. 확정 전이면 시각·장소 "미정". 얼굴은 앞의 2명 |
 | Card/Today | `src/components/home/TodayCard.tsx` | 2026-11-18 | 확정된 오늘 약속(`ConfirmedPlan`)만 받는다. 얼굴 4명 + "외 N명". 얼굴 링(진척도)은 그리지 않음 |

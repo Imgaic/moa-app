@@ -19,6 +19,9 @@ cssInterop(TextInput, {
 const GAP = 'gap-[8px]';
 const FIELD = 'h-[45px] flex-row items-center py-[2px]';
 const LINE_DEFAULT = 'border-b border-gray-40';
+// Android의 TextInput은 기본 세로 여백이 있어 칸(45) 안에서 큰 글자(28)의 윗부분이 잘린다. iOS와 웹은 원래 0이다.
+// 웹의 브라우저 기본 포커스 테두리는 없앤다. 포커스 표시는 파란 밑줄이 맡는다.
+const INPUT = 'flex-1 py-0 font-pretendard text-gray-50 web:outline-none';
 // 포커스 밑줄(파랑, 1.5)은 회색 밑줄(1) 위에 겹쳐 두고 투명도로 나타낸다. 바깥 아래 끝을 회색 밑줄과 맞춘다.
 const LINE_FOCUSED = { height: 1.5, bottom: -1 };
 const CONFIRM_HIT_SLOP = 12;
@@ -77,7 +80,7 @@ export function TextField({
           maxLength={maxLength}
           placeholder={placeholder}
           accessibilityLabel={label ?? placeholder}
-          className={`flex-1 font-pretendard text-gray-50 ${filled ? 'text-h2' : 'text-body2'}`}
+          className={`${INPUT} ${filled ? 'text-h2' : 'text-body2'}`}
           placeholderClassName="text-gray-30"
         />
         {confirmLabel ? (
