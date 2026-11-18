@@ -1,6 +1,8 @@
 import { Pressable, Text, View } from 'react-native';
 
 import type { BarTone } from '@/lib/availabilityGroups';
+import { calendarDayLabel } from '@/lib/dateText';
+import type { DateKey } from '@/lib/monthGrid';
 import type { PickedShape } from '@/lib/pickedDates';
 
 // 피그마 Date Cell(큰 달력 Calendar/Month의 칸)과 Date Cell/Bar (2026-11-18 기준). 디자인이 완성 전이라 수치가 바뀔 수 있다.
@@ -30,6 +32,8 @@ const OUTLINE: Record<Exclude<PickedShape, 'none'>, string> = {
 };
 
 export type DateCellProps = {
+  // 화면 낭독기가 읽을 이름(몇 월, 무슨 요일)을 만드는 데 쓴다.
+  dateKey: DateKey;
   day: number;
   // 0 = 일요일 ... 6 = 토요일. 일요일은 빨간 글자다.
   weekday: number;
@@ -42,11 +46,11 @@ export type DateCellProps = {
   onPress: () => void;
 };
 
-export function MonthDateCell({ day, weekday, disabled, shape, today, barTones, onPress }: DateCellProps) {
+export function MonthDateCell({ dateKey, day, weekday, disabled, shape, today, barTones, onPress }: DateCellProps) {
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${day}일`}
+      accessibilityLabel={calendarDayLabel(dateKey, { today, savedCount: barTones.length })}
       accessibilityState={{ disabled, selected: shape !== 'none' }}
       disabled={disabled}
       onPress={onPress}

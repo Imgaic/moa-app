@@ -86,6 +86,7 @@ const CANDIDATE_SAMPLES = [
   },
 ];
 const cell = (patch: Partial<DateCellProps>): DateCellProps => ({
+  dateKey: '2026-12-02',
   day: 2,
   weekday: 3,
   disabled: false,

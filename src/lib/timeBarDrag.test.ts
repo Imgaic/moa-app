@@ -51,4 +51,15 @@ describe('dragHandle', () => {
     expect(dragHandle(range, 'end', 24 * HOUR, 5).end).toBe(LAST_MINUTE);
     expect(dragHandle(range, 'end', 24 * HOUR, 30).end).toBe(23.5 * HOUR);
   });
+
+  // 화면 낭독기의 올리기·내리기는 지금 시각에서 한 간격 옮긴 곳으로 끈 것과 같다.
+  it('한 간격씩 옮겨도 같은 규칙을 지킨다', () => {
+    expect(dragHandle(range, 'start', range.start + 30, 30)).toEqual({ start: 10.5 * HOUR, end: 16 * HOUR });
+    expect(dragHandle(range, 'end', range.end - 30, 30)).toEqual({ start: 10 * HOUR, end: 15.5 * HOUR });
+    // 간격에 맞지 않는 시각(10:05)에서 올리면 다음 눈금(10:30)에 붙는다.
+    expect(dragHandle({ start: 10 * HOUR + 5, end: 16 * HOUR }, 'start', 10 * HOUR + 35, 30).start).toBe(10.5 * HOUR);
+    const shortest = { start: 10 * HOUR, end: 10 * HOUR + MIN_DURATION_MINUTES };
+    expect(dragHandle(shortest, 'start', shortest.start + 30, 30)).toEqual(shortest);
+    expect(dragHandle(shortest, 'end', shortest.end - 30, 30)).toEqual(shortest);
+  });
 });

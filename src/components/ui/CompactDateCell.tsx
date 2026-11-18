@@ -1,6 +1,7 @@
 import { Pressable, Text, View } from 'react-native';
 
 import type { BarTone } from '@/lib/availabilityGroups';
+import { calendarDayLabel } from '@/lib/dateText';
 import type { PickedShape } from '@/lib/pickedDates';
 
 import type { DateCellProps } from './MonthDateCell';
@@ -31,14 +32,14 @@ const BAND: Partial<Record<PickedShape, { left: string; right: string }>> = {
   end: { left: '0%', right: '50%' },
 };
 
-// 큰 달력 칸과 같은 값을 받는다. today는 피그마 Date Cell2에 없어 그리지 않는다.
-export function CompactDateCell({ day, weekday, disabled, shape, barTones, onPress }: DateCellProps) {
+// 큰 달력 칸과 같은 값을 받는다. today는 피그마 Date Cell2에 없어 그리지 않고 화면 낭독기 이름에만 쓴다.
+export function CompactDateCell({ dateKey, day, weekday, disabled, shape, today, barTones, onPress }: DateCellProps) {
   const band = BAND[shape];
   const picked = shape !== 'none';
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${day}일`}
+      accessibilityLabel={calendarDayLabel(dateKey, { today, savedCount: barTones.length })}
       accessibilityState={{ disabled, selected: picked }}
       disabled={disabled}
       onPress={onPress}
