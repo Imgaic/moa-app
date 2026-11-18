@@ -12,6 +12,7 @@ import {
 } from '@/lib/monthGrid';
 
 import { Icon } from './Icon';
+import { WeekdayRow } from './WeekdayRow';
 
 // 피그마 Calendar/Range, Date Cell/Range (2026-11-18 기준). 디자인이 완성 전이라 수치가 바뀔 수 있다.
 // 피그마는 칸 너비 46 × 7 = 322를 카드(338) 가운데 둔다. 화면이 좁아도 넘치지 않게 칸을 같은 비율로 나눈다.
@@ -22,11 +23,8 @@ const ROW_GAP = 'gap-[4px]';
 const CELL_HEIGHT = 40;
 const CIRCLE_SIZE = 40;
 const ARROW_SIZE = 18;
-// 요일 글자는 피그마에서 Noto Sans KR 11이다. 토큰에 없는 크기라 style로 넣고 글꼴은 Pretendard로 맞췄다.
-const WEEKDAY_FONT_SIZE = 11;
 const HIT_SLOP = 12;
 
-const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 const SUNDAY = 0;
 const SATURDAY = 6;
 
@@ -63,16 +61,7 @@ export function RangeCalendar({ range, today, onPickDate }: RangeCalendarProps) 
         <ArrowButton icon="chevron-right" label="다음 달" onPress={() => setVisible(addMonths(visible, 1))} />
       </View>
 
-      <View className="flex-row">
-        {WEEKDAYS.map((weekday, index) => (
-          <Text
-            key={weekday}
-            className={`flex-1 text-center font-pretendard ${weekdayHeaderColor(index)}`}
-            style={{ fontSize: WEEKDAY_FONT_SIZE }}>
-            {weekday}
-          </Text>
-        ))}
-      </View>
+      <WeekdayRow />
 
       <View className={ROW_GAP}>
         {monthGrid(visible).map((week) => (
@@ -135,12 +124,6 @@ function ArrowButton({
       <Icon name={icon} size={ARROW_SIZE} className={disabled ? 'text-gray-30' : 'text-gray-60'} />
     </Pressable>
   );
-}
-
-function weekdayHeaderColor(weekday: number): string {
-  if (weekday === SUNDAY) return 'text-red';
-  if (weekday === SATURDAY) return 'text-blue-50';
-  return 'text-gray-30';
 }
 
 // 날짜 글자색: 원 안은 흰색, 고를 수 없으면 gray-30, 일요일 red, 토요일 gray-50 (피그마 Calendar/Range 예시)

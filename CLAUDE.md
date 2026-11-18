@@ -84,3 +84,13 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | Card/Place List | `src/components/ui/PlaceListCard.tsx` | 2026-11-18 | 줄마다 핀, 이름, 오른쪽 회색 글자(예: "태혁 제안"). 줄 사이 구분선 |
 | Hub/Members (Collapsed) | `src/components/plan-hub/HubMembers.tsx` | 2026-11-18 | 겹친 얼굴(최대 10) + 입력 현황. 누르면 멤버 모달. 현황 줄은 `plan-hub/MemberProgress.tsx` |
 | Hub/Members (Expanded, 모달) | `src/components/plan-hub/MembersModal.tsx` | 2026-11-18 | React Native `Modal`. 최대 높이 화면의 70%, 넘치면 안에서 스크롤 |
+| Date Cell, Date Cell/Bar | `src/components/ui/MonthDateCell.tsx` | 2026-11-18 | 큰 달력 칸. 고른 모양(single/start/middle/end)은 테두리, 오늘은 날짜 테두리 원, 막대는 Available1~3 최대 3개 + "+". Event(내 일정) 막대는 없음 |
+| Date Cell2, Date Cell/Bar Compact | `src/components/ui/CompactDateCell.tsx` | 2026-11-18 | 작은 달력 칸. 원 + 띠(가운데 날은 띠만). props는 `MonthDateCell`과 같음 |
+| Calendar/Month | `src/components/ui/MonthCalendar.tsx` | 2026-11-18 | 왼쪽 위 달 넘기기 + 요일 + 큰 칸. 칸 모양은 `lookOf`로 받음. "내 일정" 토글 없음 |
+| Calendar/Compact | `src/components/ui/CompactCalendar.tsx` | 2026-11-18 | 요일 + 작은 칸. 달 이름은 상단 바(stepTitle) |
+| (달력 요일 줄) | `src/components/ui/WeekdayRow.tsx` | 2026-11-18 | Calendar/Range, Month, Compact 공용 |
+| Card/Date Summary | `src/components/ui/DateSummaryCard.tsx` | 2026-11-18 | caption, label. `tone`을 주면 더하기 대신 막대 색 세로줄(저장된 묶음 줄, 피그마에 없음) |
+| Card/Time Input (Editing Toggle) | `src/components/my-input/TimeInputCard.tsx` | 2026-11-18 | 닫기, 날짜 요약, 확인, 시간 선택, 자차 토글, 출발지 줄. Saved 상태(막대 안)는 다음 작업 |
+| Card/Time Input 안 time-range | `src/components/ui/TimeRangeTabs.tsx` | 2026-11-18 | 시작/종료 두 칸, 흰 칸이 고치는 쪽 |
+| Input/Time Picker | `src/components/my-input/TimeWheelPicker.tsx`, 칸 하나는 `src/components/ui/WheelColumn.tsx` | 2026-11-18 | props는 startMinutes, endMinutes, onChange뿐(막대 안과 바꿔 끼움). 오전·오후 / 시 / 분(5분) |
+| List/Origin Row | `src/components/ui/OriginRow.tsx` | 2026-11-18 | name(null이면 "출발 장소"), badge, onPress |

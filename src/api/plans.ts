@@ -62,7 +62,9 @@ export async function getPlans(): Promise<Plan[]> {
 // 약속 하나. 없는 약속이면 null이다.
 export async function getPlan(planId: string): Promise<PlanDetail | null> {
   await wait();
-  return findMockPlan(planId) ?? null;
+  const plan = findMockPlan(planId);
+  // 가짜 저장소의 객체를 그대로 주면 바뀌어도 같은 객체라 화면이 다시 그리지 않는다. 서버 응답처럼 새 객체로 준다.
+  return plan ? { ...plan } : null;
 }
 
 // 약속에 초대하는 링크. 참가자 누구나 공유할 수 있다.
