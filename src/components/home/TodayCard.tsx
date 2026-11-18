@@ -11,21 +11,26 @@ import type { ConfirmedPlan } from '@/lib/homePlans';
 import { planLabel } from '@/lib/planLabel';
 
 // 피그마 Card/Today (2026-11-18 기준). 디자인이 완성 전이라 수치가 바뀔 수 있다.
-// 피그마의 티켓 모양(양옆이 파인 검은 카드)은 SVG 한 장(370 × 238)이다. 화면 너비에 따라 카드 너비가 바뀌어도
-// 파인 곳이 찌그러지지 않게, 둥근 사각형 위에 바탕색(gray-10) 원 두 개를 얹어 그렸다.
+// 위에서 아래로 줄 네 개가 흐른다: 머리(제목과 남은 시간) → 시각·장소 → 점선 → 얼굴. 수치는 피그마 370 × 238에서 잰 값이다.
+// 고정 좌표는 티켓의 양옆 파인 곳에만 쓴다(둥근 사각형 위에 바탕색 원 두 개를 얹어, 카드 너비가 바뀌어도 찌그러지지 않는다).
+// 자리가 모자랄 때(docs/open-questions.md 2장): 남은 시간 알약, 날짜, 시각은 줄지 않는다. 제목과 장소 이름은 "…"로 준다.
+// 카드가 좁아지면 시각과 장소 사이의 틈이 30에서 12까지 먼저 줄고, 장소 이름은 세 글자쯤의 자리(PLACE_MIN_WIDTH)를 늘 갖는다. 얼굴은 들어가는 만큼만 그리고 나머지는 "외 N명"에 더한다.
 // 피그마의 얼굴 테두리 링(파란 호)은 멤버별 이동 진척도로 보이는데 범위가 미정이라(Q8) 그리지 않았다.
-const CARD = { height: 238, radius: 16 };
-const NOTCH = { radius: 16, centerY: 143 };
-// right: 제목이 길어도 오른쪽 위 라벨(가장 긴 "23시간 후")과 겹치지 않게 비워 두는 너비
-const HEAD = { left: 32, top: 17, right: 96 };
-const BADGE = { right: 19, top: 24, fontSize: 10, lineHeight: 12 };
-// right: 장소 이름이 길면 카드 안쪽 여백에서 "…"로 줄도록 오른쪽 끝을 정한다(점선의 안쪽 여백과 같다).
-const WHEN = { left: 32, top: 86, right: 28, gap: 30 };
+const CARD = { minHeight: 238, radius: 16, paddingTop: 17, paddingBottom: 20 };
+const HEAD = { left: 32, right: 19, gap: 12 };
+const BADGE = { top: 7, fontSize: 10, lineHeight: 12 };
+const WHEN = { top: 15, left: 32, right: 28 };
+// 구분선 양옆의 틈. 피그마 너비에서는 max이고, 카드가 좁아 장소 자리가 모자라면 min까지 준다.
+const WHEN_GAP = { min: 12, max: 30 };
+// 핀(20) + 틈(8) + 세 글자("중앙대")가 들어가는 너비
+const PLACE_MIN_WIDTH = 104;
 const DIVIDER_HEIGHT = 30;
 const PIN_SIZE = 20;
-const DASH = { inset: 28, top: 150, dash: 4.0256, opacity: 0.6 };
+// 파인 곳의 가운데는 시각·장소 줄 아래 2, 점선은 거기서 7 아래다.
+const NOTCH = { radius: 16, top: 2 };
+const DASH = { top: 7, inset: 28, dash: 4.0256, opacity: 0.6 };
 // 얼굴 줄과 "외 N명"이 양 끝에 놓이는 맨 아래 줄
-const FOOT = { left: 28, right: 19, top: 168 };
+const FOOT = { top: 17, left: 28, right: 19 };
 const FACES = { gap: 12, size: 50, max: 4 };
 // left: 얼굴과 붙지 않게 두는 틈. bottom: 피그마에서 글자가 얼굴 줄의 바닥보다 8 위에 있다.
 const MORE = { left: 12, bottom: 8, fontSize: 13, lineHeight: 16 };
@@ -54,51 +59,39 @@ export function TodayCard({ plan, now, onPress }: TodayCardProps) {
       accessibilityLabel={`오늘의 약속, ${plan.title}, ${label}, ${timeText(startsAt)}, ${plan.confirmed.place.name}`}
       onPress={onPress}
       className="overflow-hidden bg-gray-60"
-      style={{ height: CARD.height, borderRadius: CARD.radius }}>
-      {/* 티켓의 양옆 파인 곳 */}
+      style={{
+        minHeight: CARD.minHeight,
+        borderRadius: CARD.radius,
+        paddingTop: CARD.paddingTop,
+        paddingBottom: CARD.paddingBottom,
+      }}>
       <View
-        className="absolute rounded-full bg-gray-10"
-        style={{
-          width: NOTCH.radius * 2,
-          height: NOTCH.radius * 2,
-          left: -NOTCH.radius,
-          top: NOTCH.centerY - NOTCH.radius,
-        }}
-      />
-      <View
-        className="absolute rounded-full bg-gray-10"
-        style={{
-          width: NOTCH.radius * 2,
-          height: NOTCH.radius * 2,
-          right: -NOTCH.radius,
-          top: NOTCH.centerY - NOTCH.radius,
-        }}
-      />
-
-      <View className="absolute gap-[3px]" style={HEAD}>
-        <Text
-          className="font-pretendard text-caption-14 text-white"
-          style={{ opacity: SUB_OPACITY }}>
-          오늘의 약속
-        </Text>
-        <Text numberOfLines={1} className="font-pretendard text-h2 text-white">
-          {plan.title}
-        </Text>
+        className="flex-row items-start"
+        style={{ paddingLeft: HEAD.left, paddingRight: HEAD.right, gap: HEAD.gap }}>
+        <View className="flex-1 gap-[3px]">
+          <Text
+            className="font-pretendard text-caption-14 text-white"
+            style={{ opacity: SUB_OPACITY }}>
+            오늘의 약속
+          </Text>
+          <Text numberOfLines={1} className="font-pretendard text-h2 text-white">
+            {plan.title}
+          </Text>
+        </View>
+        <View
+          className="rounded-full border border-white bg-red px-[12px] py-[6px]"
+          style={{ marginTop: BADGE.top }}>
+          <Text
+            className="font-pretendard text-white"
+            style={{ fontSize: BADGE.fontSize, lineHeight: BADGE.lineHeight }}>
+            {label}
+          </Text>
+        </View>
       </View>
 
       <View
-        className="absolute rounded-full border border-white bg-red px-[12px] py-[6px]"
-        style={{ right: BADGE.right, top: BADGE.top }}>
-        <Text
-          className="font-pretendard text-white"
-          style={{ fontSize: BADGE.fontSize, lineHeight: BADGE.lineHeight }}>
-          {label}
-        </Text>
-      </View>
-
-      <View
-        className="absolute flex-row items-end"
-        style={WHEN}>
+        className="flex-row items-end"
+        style={{ marginTop: WHEN.top, paddingLeft: WHEN.left, paddingRight: WHEN.right }}>
         <View className="gap-[4px]">
           <Text
             className="font-pretendard text-caption-14 text-white"
@@ -107,8 +100,10 @@ export function TodayCard({ plan, now, onPress }: TodayCardProps) {
           </Text>
           <Text className="font-pretendard text-h2 text-white">{timeText(startsAt)}</Text>
         </View>
+        <WhenGap />
         <View className="mb-[2px] w-px bg-gray-20" style={{ height: DIVIDER_HEIGHT }} />
-        <View className="shrink flex-row items-center gap-[8px]">
+        <WhenGap />
+        <View className="flex-1 flex-row items-center gap-[8px]" style={{ minWidth: PLACE_MIN_WIDTH }}>
           <Icon name="pin-fill" size={PIN_SIZE} className="shrink-0 text-gray-10" />
           <Text numberOfLines={1} className="shrink font-pretendard text-h2 text-white">
             {plan.confirmed.place.name}
@@ -116,11 +111,17 @@ export function TodayCard({ plan, now, onPress }: TodayCardProps) {
         </View>
       </View>
 
+      {/* 티켓의 양옆 파인 곳. 높이가 없는 줄에 원을 얹어, 글자가 커져 줄이 내려가도 점선과 같이 내려간다. */}
+      <View style={{ marginTop: NOTCH.top }}>
+        <Notch side="left" />
+        <Notch side="right" />
+      </View>
+
       {/* 점선. 피그마는 길이 4.03의 선과 같은 길이의 틈이 반복된다. */}
       <Svg
         height={1}
-        className="absolute text-gray-20"
-        style={{ left: DASH.inset, right: DASH.inset, top: DASH.top }}>
+        className="text-gray-20"
+        style={{ marginTop: DASH.top, marginHorizontal: DASH.inset }}>
         <Line
           x1="0"
           y1="0.5"
@@ -132,16 +133,18 @@ export function TodayCard({ plan, now, onPress }: TodayCardProps) {
         />
       </Svg>
 
-      <View className="absolute flex-row items-end" style={FOOT}>
+      <View
+        className="flex-row items-end"
+        style={{ marginTop: FOOT.top, paddingLeft: FOOT.left, paddingRight: FOOT.right }}>
         <View
           className="flex-1 flex-row"
           style={{ gap: FACES.gap }}
           onLayout={(event) => setFacesWidth(event.nativeEvent.layout.width)}>
-          {faces.map((m) => (
+          {faces.map((member) => (
             <Avatar
-              key={m.id}
-              name={m.name}
-              photo={m.avatarUrl ? { uri: m.avatarUrl } : undefined}
+              key={member.id}
+              name={member.name}
+              photo={member.avatarUrl ? { uri: member.avatarUrl } : undefined}
               size={FACES.size}
             />
           ))}
@@ -170,5 +173,19 @@ export function TodayCard({ plan, now, onPress }: TodayCardProps) {
         ) : null}
       </View>
     </Pressable>
+  );
+}
+
+// 시각과 장소 사이의 틈. 카드가 좁으면 max에서 min까지 준다.
+function WhenGap() {
+  return <View className="shrink" style={{ flexBasis: WHEN_GAP.max, minWidth: WHEN_GAP.min }} />;
+}
+
+function Notch({ side }: { side: 'left' | 'right' }) {
+  return (
+    <View
+      className="absolute rounded-full bg-gray-10"
+      style={{ width: NOTCH.radius * 2, height: NOTCH.radius * 2, top: -NOTCH.radius, [side]: -NOTCH.radius }}
+    />
   );
 }
