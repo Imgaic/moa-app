@@ -1,12 +1,12 @@
 import { Pressable, Text, View } from 'react-native';
 
+import { GrayBadge } from './Badge';
 import { Icon } from './Icon';
 
 // 피그마 List/Origin Row (2026-11-18 기준). 디자인이 완성 전이라 수치가 바뀔 수 있다.
 // 핀, 밑줄 그은 출발지 이름, 오른쪽 아래 회색 배지(예: 6시간 가능). 줄을 누르면 출발지를 고르러 간다.
-// 이름 13, 배지 10은 토큰에 없는 크기라 style로 넣었다. 밑줄 #DDDDDD는 가까운 gray-20으로 썼다.
+// 이름 13은 토큰에 없는 크기라 style로 넣었다. 밑줄 #DDDDDD는 가까운 gray-20으로 썼다.
 const NAME_FONT_SIZE = 13;
-const BADGE_FONT_SIZE = 10;
 const UNDERLINE_WIDTH = 144;
 const UNDERLINE_GAP = 6;
 // 피그마 Saved 상태의 빈 출발지 글자
@@ -39,13 +39,7 @@ export function OriginRow({ name, badge, onPress }: OriginRowProps) {
           <View className="absolute bottom-0 left-0 h-px bg-gray-20" style={{ width: UNDERLINE_WIDTH }} />
         </View>
       </Pressable>
-      {badge ? (
-        <View className="rounded-full bg-gray-10 px-[10px] py-[5px]">
-          <Text className="font-pretendard text-gray-60" style={{ fontSize: BADGE_FONT_SIZE }}>
-            {badge}
-          </Text>
-        </View>
-      ) : null}
+      {badge ? <GrayBadge label={badge} /> : null}
     </View>
   );
 }

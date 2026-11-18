@@ -93,4 +93,7 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | Card/Time Input (Editing Toggle) | `src/components/my-input/TimeInputCard.tsx` | 2026-11-18 | 닫기, 날짜 요약, 확인, 시간 선택, 자차 토글, 출발지 줄. Saved 상태(막대 안)는 다음 작업 |
 | Card/Time Input 안 time-range | `src/components/ui/TimeRangeTabs.tsx` | 2026-11-18 | 시작/종료 두 칸, 흰 칸이 고치는 쪽 |
 | Input/Time Picker | `src/components/my-input/TimeWheelPicker.tsx`, 칸 하나는 `src/components/ui/WheelColumn.tsx` | 2026-11-18 | props는 startMinutes, endMinutes, onChange뿐(막대 안과 바꿔 끼움). 오전·오후 / 시 / 분(5분) |
-| List/Origin Row | `src/components/ui/OriginRow.tsx` | 2026-11-18 | name(null이면 "출발 장소"), badge, onPress |
+| List/Origin Row | `src/components/ui/OriginRow.tsx` | 2026-11-18 | name(null이면 "출발 장소"), badge(`GrayBadge`), onPress |
+| Input/Time Bar | `src/components/ui/TimeBar.tsx` | 2026-11-18 | 눈금 + 트랙 + 파란 구간 + 손잡이 둘. props는 `TimeWheelPicker`와 같다. 하루 중 "창"만 보이고 끌기·두 손가락 확대(웹은 휠)로 창이 바뀐다. 동작은 `src/hooks/useTimeBarGestures.ts`, 계산은 `src/lib/timeBarWindow.ts`(창), `timeBarScale.ts`(위치·눈금·스냅), `timeBarDrag.ts`(잡을 대상·손잡이 시각) |
+| Card/Time Input (Saved Toggle, 막대 안) | `src/components/my-input/TimeBarPicker.tsx` | 2026-11-18 | 상자 없는 시작/종료 한 줄 + `TimeBar`. 배지 자리는 `TimeInputCard`의 `PICKERS`(T11 비교용 임시 전환 장치와 함께) |
+| badge (회색 알약) | `src/components/ui/Badge.tsx`의 `GrayBadge` | 2026-11-18 | label. 출발지 줄 오른쪽, 막대 아래 |
