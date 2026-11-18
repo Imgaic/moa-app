@@ -85,9 +85,11 @@ export function addMockPlan(plan: PlanDetail) {
 }
 
 // 내 입력을 저장하거나 비웠을 때 멤버의 입력 여부를 바꾼다.
+// 화면이 바뀐 것을 알도록(React Compiler는 같은 객체면 다시 그리지 않는다) 멤버 목록을 새로 만든다.
 export function markMockSubmitted(planId: string, memberId: string, submitted: boolean) {
-  const member = findMockPlan(planId)?.members.find((candidate) => candidate.id === memberId);
-  if (member) member.submitted = submitted;
+  const plan = findMockPlan(planId);
+  if (!plan) return;
+  plan.members = plan.members.map((member) => (member.id === memberId ? { ...member, submitted } : member));
 }
 
 export function mockInviteLink(planId: string): string {

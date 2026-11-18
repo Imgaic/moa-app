@@ -9,9 +9,11 @@ import { ProgressBadge, Tooltip } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { CheckedAvatar } from '@/components/ui/CheckedAvatar';
 import { Checkbox } from '@/components/ui/Checkbox';
+import { CompactDateCell } from '@/components/ui/CompactDateCell';
 import { DoneIllustration, Icon, type IconName } from '@/components/ui/Icon';
 import { InputField, InputFieldGroup } from '@/components/ui/InputField';
 import { MemberRow } from '@/components/ui/MemberRow';
+import { MonthDateCell, type DateCellProps } from '@/components/ui/MonthDateCell';
 import { OptionCard } from '@/components/ui/OptionCard';
 import { PageTitle } from '@/components/ui/PageTitle';
 import { PlaceListCard } from '@/components/ui/PlaceListCard';
@@ -48,6 +50,36 @@ const tabs: { icon: TabIcon; label: string }[] = [
   { icon: 'home', label: '홈' },
   { icon: 'calendar', label: '달력' },
   { icon: 'user', label: '내 정보' },
+];
+
+// 날짜 칸 견본: 피그마 Date Cell, Date Cell2의 State 순서(기본, 선택, 시작, 중간, 끝, 비활성)와 그 밖의 상태
+const noop = () => {};
+const cell = (patch: Partial<DateCellProps>): DateCellProps => ({
+  day: 2,
+  weekday: 3,
+  disabled: false,
+  shape: 'none',
+  today: false,
+  barTones: [],
+  onPress: noop,
+  ...patch,
+});
+const cellStates: DateCellProps[] = [
+  cell({}),
+  cell({ shape: 'single' }),
+  cell({ shape: 'start' }),
+  cell({ shape: 'middle' }),
+  cell({ shape: 'end' }),
+  cell({ disabled: true }),
+];
+const cellExtras: DateCellProps[] = [
+  cell({ today: true }),
+  cell({ weekday: 0, day: 5 }),
+  cell({ weekday: 6, day: 11 }),
+  cell({ day: 30, disabled: true, weekday: 1 }),
+  cell({ barTones: [1] }),
+  cell({ barTones: [1, 2, 3] }),
+  cell({ barTones: [1, 2, 3, 1], shape: 'single' }),
 ];
 
 const colors = [
@@ -339,6 +371,32 @@ export default function TokenSamples() {
               { id: '3', name: '아주 긴 장소 이름이 들어가면 줄이 어떻게 되는지', detail: '해진 제안' },
             ]}
           />
+        </Section>
+
+        <Section title="Date Cell (기본, 선택, 시작, 중간, 끝, 비활성) / 오늘, 일, 토, 앞뒤 달, 막대 1·3·4개">
+          <View className="w-[300px] flex-row">
+            {cellStates.map((props, index) => (
+              <MonthDateCell key={index} {...props} />
+            ))}
+          </View>
+          <View className="w-[338px] flex-row">
+            {cellExtras.map((props, index) => (
+              <MonthDateCell key={index} {...props} />
+            ))}
+          </View>
+        </Section>
+
+        <Section title="Date Cell2 (같은 순서)">
+          <View className="w-[300px] flex-row">
+            {cellStates.map((props, index) => (
+              <CompactDateCell key={index} {...props} />
+            ))}
+          </View>
+          <View className="w-[338px] flex-row">
+            {cellExtras.map((props, index) => (
+              <CompactDateCell key={index} {...props} />
+            ))}
+          </View>
         </Section>
 
         <Section title="Calendar/Range · 시작, 끝, 다시 누르기, 달 넘기기">
