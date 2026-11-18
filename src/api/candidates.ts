@@ -38,7 +38,7 @@ export async function getCandidates(planId: string): Promise<Candidate[]> {
   return mockCandidates(planId).map((candidate) => ({ ...candidate }));
 }
 
-// 내가 후보 하나에 투표한다. 한 사람이 한 후보에만, 한 번만 투표한다(docs/open-questions.md 2장 가정).
+// 내가 후보 하나에 투표한다. 한 사람은 한 후보에만 투표하고, 마감 전에 다시 부르면 표가 그 후보로 옮겨 간다(T13).
 export async function vote(planId: string, candidateId: string): Promise<void> {
   const me = await getMe();
   await wait();

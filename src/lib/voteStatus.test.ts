@@ -51,6 +51,17 @@ describe('voteActionOf', () => {
     });
   });
 
+  it('투표한 뒤 다른 후보를 고르면 호스트와 참가자 모두 투표 바꾸기', () => {
+    const change = { kind: 'vote', label: '투표 바꾸기', disabled: false };
+    expect(voteActionOf({ isHost: true, myVote: 'c1', selectedId: 'c2' })).toEqual(change);
+    expect(voteActionOf({ isHost: false, myVote: 'c1', selectedId: 'c2' })).toEqual(change);
+  });
+
+  it('내가 투표한 후보를 다시 고르면 바꾸기가 아니다', () => {
+    expect(voteActionOf({ isHost: true, myVote: 'c1', selectedId: 'c1' }).kind).toBe('close');
+    expect(voteActionOf({ isHost: false, myVote: 'c1', selectedId: 'c1' }).kind).toBe('wait');
+  });
+
   it('참가자가 투표했으면 누를 수 없는 안내', () => {
     expect(voteActionOf({ isHost: false, myVote: 'c1', selectedId: null })).toEqual({
       kind: 'wait',
