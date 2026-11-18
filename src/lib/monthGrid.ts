@@ -22,6 +22,12 @@ export function toDateKey(date: Date): DateKey {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
 
+// "2026-04-30"에서 1일 뒤 → "2026-05-01"
+export function addDays(key: DateKey, count: number): DateKey {
+  const [year, month, day] = key.split('-').map(Number);
+  return toDateKey(new Date(year, month - 1, day + count));
+}
+
 export function addMonths({ year, month }: YearMonth, count: number): YearMonth {
   const shifted = new Date(year, month - 1 + count, 1);
   return { year: shifted.getFullYear(), month: shifted.getMonth() + 1 };

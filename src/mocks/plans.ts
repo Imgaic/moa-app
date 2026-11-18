@@ -4,6 +4,7 @@
 import type { Member, PlanDetail } from '@/api/plans';
 import { toDateKey } from '@/lib/monthGrid';
 
+import { seedMockAvailability } from './availability';
 import { MOCK_ME } from './me';
 import { MOCK_PLACES } from './places';
 
@@ -67,7 +68,10 @@ let store: PlanDetail[] | null = null;
 
 // 홈 목록. 처음 부를 때 한 번 만든다.
 export function mockPlans(now: Date): PlanDetail[] {
-  store ??= MOCK_EMPTY_PLANS ? [] : createMockPlans(now);
+  if (store === null) {
+    store = MOCK_EMPTY_PLANS ? [] : createMockPlans(now);
+    store.forEach((plan) => seedMockAvailability(plan.id, plan.dateRange.start));
+  }
   return store;
 }
 
@@ -78,6 +82,12 @@ export function findMockPlan(planId: string): PlanDetail | undefined {
 // createPlan으로 만든 약속은 목록 맨 앞에 둔다.
 export function addMockPlan(plan: PlanDetail) {
   mockPlans(new Date()).unshift(plan);
+}
+
+// 내 입력을 저장하거나 비웠을 때 멤버의 입력 여부를 바꾼다.
+export function markMockSubmitted(planId: string, memberId: string, submitted: boolean) {
+  const member = findMockPlan(planId)?.members.find((candidate) => candidate.id === memberId);
+  if (member) member.submitted = submitted;
 }
 
 export function mockInviteLink(planId: string): string {

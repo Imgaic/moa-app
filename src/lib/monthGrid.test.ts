@@ -1,4 +1,4 @@
-import { addMonths, isEarlierMonth, monthGrid, toDateKey, yearMonthOf } from './monthGrid';
+import { addDays, addMonths, isEarlierMonth, monthGrid, toDateKey, yearMonthOf } from './monthGrid';
 
 describe('toDateKey', () => {
   it('기기 시간대의 날짜를 "YYYY-MM-DD"로', () => {
@@ -63,5 +63,13 @@ describe('monthGrid', () => {
     expect(january[0][0].key).toBe('2026-12-27');
     const december = monthGrid({ year: 2026, month: 12 });
     expect(december.at(-1)?.at(-1)?.key).toBe('2027-01-02');
+  });
+});
+
+describe('addDays', () => {
+  it('날짜 키에서 며칠 앞뒤', () => {
+    expect(addDays('2026-04-30', 1)).toBe('2026-05-01');
+    expect(addDays('2026-01-01', -1)).toBe('2025-12-31');
+    expect(addDays('2028-02-28', 1)).toBe('2028-02-29');
   });
 });
