@@ -8,11 +8,19 @@ import { ProgressBadge, Tooltip } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { DoneIllustration, Icon, type IconName } from '@/components/ui/Icon';
+import { InputField, InputFieldGroup } from '@/components/ui/InputField';
+import { OptionCard } from '@/components/ui/OptionCard';
+import { PageTitle } from '@/components/ui/PageTitle';
+import { PlaceRow } from '@/components/ui/PlaceRow';
+import { RangeCalendar } from '@/components/ui/RangeCalendar';
 import { SocialButton } from '@/components/ui/SocialButton';
+import { SummaryItem } from '@/components/ui/SummaryItem';
 import { TabBar, TabItem, type TabIcon } from '@/components/ui/TabBar';
 import { TextField } from '@/components/ui/TextField';
 import { Toggle } from '@/components/ui/Toggle';
 import { TopBar } from '@/components/ui/TopBar';
+import { EMPTY_RANGE, pickRangeDate } from '@/lib/dateRange';
+import { toDateKey } from '@/lib/monthGrid';
 
 const samplePhoto = require('@/assets/images/samples/avatar-photo.png');
 
@@ -83,6 +91,8 @@ export default function TokenSamples() {
   const [labeled, setLabeled] = useState('');
   const [tab, setTab] = useState<TabIcon>('home');
   const [memberDone, setMemberDone] = useState(true);
+  const [option, setOption] = useState<'recommend' | 'fixed'>('fixed');
+  const [range, setRange] = useState(EMPTY_RANGE);
 
   return (
     <SafeAreaView className="flex-1 bg-gray-10">
@@ -269,6 +279,62 @@ export default function TokenSamples() {
             <Tooltip label="최근 로그인" />
             <ProgressBadge count="3/4명" label="입력 완료" />
           </View>
+        </Section>
+
+        <Section title="Title/Page">
+          <PageTitle title="약속 만들기" subtitle="약속 이름을 입력하세요" />
+        </Section>
+
+        <Section title="List/Summary Item">
+          <View className="gap-[14px]">
+            <SummaryItem label="필요한 시간" value="2시간" />
+            <SummaryItem label="약속 이름" value="저녁 모임" />
+          </View>
+        </Section>
+
+        <Section title="Input/Field Group (Selected, Default)">
+          <View className="bg-white p-3">
+            <InputFieldGroup>
+              <InputField label="시작" value="4월 1일" selected />
+              <InputField label="종료" value="4월 30일" selected={false} />
+            </InputFieldGroup>
+          </View>
+        </Section>
+
+        <Section title="Card/Option · 누르면 고른 카드가 바뀐다">
+          <OptionCard
+            title="추천 받을래요"
+            description="모두의 출발지로 중간 지점을 찾아요"
+            selected={option === 'recommend'}
+            onSelect={() => setOption('recommend')}
+          />
+          <OptionCard
+            title="정해져 있어요"
+            description="장소를 직접 골라요"
+            selected={option === 'fixed'}
+            onSelect={() => setOption('fixed')}>
+            <PlaceRow type="search" label="장소 찾기" onPress={() => undefined} />
+          </OptionCard>
+        </Section>
+
+        <Section title="List/Place Row (Selected, Search)">
+          <View className="gap-4 bg-white p-4">
+            <PlaceRow
+              type="selected"
+              name="마찌마찌중앙대점"
+              address="경기 안성시 대덕면 대학9길 12"
+              onChange={() => undefined}
+            />
+            <PlaceRow type="search" label="장소 찾기" onPress={() => undefined} />
+          </View>
+        </Section>
+
+        <Section title="Calendar/Range · 시작, 끝, 다시 누르기, 달 넘기기">
+          <RangeCalendar
+            range={range}
+            today={toDateKey(new Date())}
+            onPickDate={(key) => setRange(pickRangeDate(range, key))}
+          />
         </Section>
       </ScrollView>
     </SafeAreaView>
