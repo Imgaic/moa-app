@@ -81,7 +81,9 @@ export function WheelColumn({ items, selectedIndex, onChange, width, accessibili
             onPress={() => index !== selectedIndex && onChange(index)}
             className="items-center justify-center"
             style={{ height: ITEM_HEIGHT }}>
+            {/* 웹에서 마우스로 끌면 글자가 선택되지 않게 한다. */}
             <Text
+              selectable={false}
               className={`font-pretendard text-body2 ${index === selectedIndex ? 'text-gray-50' : 'text-gray-30'}`}
               style={{ opacity: index === selectedIndex ? 1 : DIMMED_OPACITY }}>
               {item}
