@@ -2,11 +2,12 @@
 // 어떤 약속을 어디에 둘지, 라벨과 날짜 글자는 src/lib/의 함수가 정한다.
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import { getPlans, type Plan } from '@/api/plans';
 import { PlanCard } from '@/components/home/PlanCard';
 import { TodayCard } from '@/components/home/TodayCard';
+import { LoadStatus } from '@/components/ui/LoadStatus';
 import { TopBar } from '@/components/ui/TopBar';
 import { splitHomePlans } from '@/lib/homePlans';
 
@@ -36,12 +37,8 @@ export default function Home() {
   return (
     <View className="flex-1 bg-gray-10">
       <TopBar type="largeTitle" title="약속" onAction={() => router.push('/plans/new')} />
-      {loaded.state === 'loading' ? (
-        <ActivityIndicator className="mt-[40px]" />
-      ) : loaded.state === 'error' ? (
-        <Text className="mt-[40px] text-center font-pretendard text-body2 text-gray-40">
-          약속을 불러오지 못했어요
-        </Text>
+      {loaded.state !== 'done' ? (
+        <LoadStatus state={loaded.state} errorText="약속을 불러오지 못했어요" />
       ) : loaded.plans.length === 0 ? (
         // 임시 빈 상태(docs/open-questions.md T1): 상단 바와 탭 바만 보인다. 빈 상태 디자인이 나오면 바꾼다.
         // 개발 중에는 src/mocks/plans.ts의 MOCK_EMPTY_PLANS를 true로 바꿔 본다.

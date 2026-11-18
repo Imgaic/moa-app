@@ -6,7 +6,7 @@
 // 지난 약속은 홈에서 내려가 이 화면에 올 일이 거의 없어 확정과 같은 내용을 보여준다.
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { closeVote, getCandidates, vote, type Candidate } from '@/api/candidates';
 import { getMe } from '@/api/me';
@@ -23,6 +23,7 @@ import { CollectingContent } from '@/components/plan-hub/CollectingContent';
 import { ConfirmedContent } from '@/components/plan-hub/ConfirmedContent';
 import { ConfirmedNotice } from '@/components/plan-hub/ConfirmedNotice';
 import { RecommendedContent } from '@/components/plan-hub/RecommendedContent';
+import { LoadStatus } from '@/components/ui/LoadStatus';
 import { PageTitle } from '@/components/ui/PageTitle';
 import { TopBar } from '@/components/ui/TopBar';
 import { confirm, notify, shareLink } from '@/lib/dialogs';
@@ -85,12 +86,8 @@ export default function PlanHub() {
   return (
     <View className="flex-1 bg-gray-10">
       <TopBar type="share" onBack={() => router.back()} onAction={share} />
-      {loaded.state === 'loading' ? (
-        <ActivityIndicator className="mt-[40px]" />
-      ) : loaded.state !== 'done' ? (
-        <Text className="mt-[40px] text-center font-pretendard text-body2 text-gray-40">
-          {loaded.state === 'missing' ? '약속을 찾을 수 없어요' : '약속을 불러오지 못했어요'}
-        </Text>
+      {loaded.state !== 'done' ? (
+        <LoadStatus state={loaded.state} errorText="약속을 불러오지 못했어요" missingText="약속을 찾을 수 없어요" />
       ) : (
         <>
           <View className="px-[32px]" style={{ paddingTop: TITLE_TOP }}>
