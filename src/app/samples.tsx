@@ -1,4 +1,4 @@
-// 토큰과 UI 컴포넌트 견본을 보는 임시 화면이다. 다음 세션에서 실제 화면을 만들 때 지운다.
+// 토큰과 UI 컴포넌트 견본을 보는 개발용 임시 화면이다. 주소(/samples)로만 연다. 실제 화면이 다 만들어지면 지운다.
 import { useState, type ReactNode } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

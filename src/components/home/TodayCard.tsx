@@ -1,0 +1,160 @@
+import { Pressable, Text, View } from 'react-native';
+import { Line, Path } from 'react-native-svg';
+
+import { AvatarCircle } from '@/components/ui/Avatar';
+import { Icon } from '@/components/ui/Icon';
+import { Svg } from '@/components/ui/Svg';
+import { longDateText, timeText } from '@/lib/dateText';
+import type { ConfirmedPlan } from '@/lib/homePlans';
+import { planLabel } from '@/lib/planLabel';
+
+// 피그마 Card/Today (2026-11-18 기준). 디자인이 완성 전이라 수치가 바뀔 수 있다.
+// 피그마의 티켓 모양(양옆이 파인 검은 카드)은 SVG 한 장(370 × 238)이다. 화면 너비에 따라 카드 너비가 바뀌어도
+// 파인 곳이 찌그러지지 않게, 둥근 사각형 위에 바탕색(gray-10) 원 두 개를 얹어 그렸다.
+// 피그마의 얼굴 테두리 링(파란 호)은 멤버별 이동 진척도로 보이는데 범위가 미정이라(Q8) 그리지 않았다.
+const CARD = { height: 238, radius: 16 };
+const NOTCH = { radius: 16, centerY: 143 };
+const HEAD = { left: 32, top: 17 };
+const BADGE = { right: 19, top: 24, fontSize: 10, lineHeight: 12 };
+const WHEN = { left: 32, top: 86, gap: 30 };
+const DIVIDER_HEIGHT = 30;
+const PIN_SIZE = 20;
+const DASH = { inset: 28, top: 150, dash: 4.0256, opacity: 0.6 };
+const FACES = { left: 28, top: 168, gap: 12, size: 50, max: 4 };
+const MORE = { right: 19, bottom: 28, fontSize: 13, lineHeight: 16 };
+const SUB_OPACITY = 0.8;
+
+type TodayCardProps = {
+  plan: ConfirmedPlan;
+  // 라벨("10분 후")을 계산하는 기준 시각
+  now: Date;
+  onPress: () => void;
+};
+
+export function TodayCard({ plan, now, onPress }: TodayCardProps) {
+  const startsAt = new Date(plan.confirmed.startsAt);
+  const label = planLabel(plan, now);
+  const faces = plan.members.slice(0, FACES.max);
+  const others = plan.members.length - faces.length;
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`오늘의 약속, ${plan.title}, ${label}, ${timeText(startsAt)}, ${plan.confirmed.place.name}`}
+      onPress={onPress}
+      className="overflow-hidden bg-gray-60"
+      style={{ height: CARD.height, borderRadius: CARD.radius }}>
+      {/* 티켓의 양옆 파인 곳 */}
+      <View
+        className="absolute rounded-full bg-gray-10"
+        style={{
+          width: NOTCH.radius * 2,
+          height: NOTCH.radius * 2,
+          left: -NOTCH.radius,
+          top: NOTCH.centerY - NOTCH.radius,
+        }}
+      />
+      <View
+        className="absolute rounded-full bg-gray-10"
+        style={{
+          width: NOTCH.radius * 2,
+          height: NOTCH.radius * 2,
+          right: -NOTCH.radius,
+          top: NOTCH.centerY - NOTCH.radius,
+        }}
+      />
+
+      <View className="absolute gap-[3px]" style={HEAD}>
+        <Text
+          className="font-pretendard text-caption-14 text-white"
+          style={{ opacity: SUB_OPACITY }}>
+          오늘의 약속
+        </Text>
+        <Text numberOfLines={1} className="font-pretendard text-h2 text-white">
+          {plan.title}
+        </Text>
+      </View>
+
+      <View
+        className="absolute rounded-full border border-white bg-red px-[12px] py-[6px]"
+        style={{ right: BADGE.right, top: BADGE.top }}>
+        <Text
+          className="font-pretendard text-white"
+          style={{ fontSize: BADGE.fontSize, lineHeight: BADGE.lineHeight }}>
+          {label}
+        </Text>
+      </View>
+
+      <View
+        className="absolute flex-row items-end"
+        style={{ left: WHEN.left, top: WHEN.top, gap: WHEN.gap }}>
+        <View className="gap-[4px]">
+          <Text
+            className="font-pretendard text-caption-14 text-white"
+            style={{ opacity: SUB_OPACITY }}>
+            {longDateText(startsAt)}
+          </Text>
+          <Text className="font-pretendard text-h2 text-white">{timeText(startsAt)}</Text>
+        </View>
+        <View className="mb-[2px] w-px bg-gray-20" style={{ height: DIVIDER_HEIGHT }} />
+        <View className="flex-row items-center gap-[8px]">
+          <Icon name="pin-fill" size={PIN_SIZE} className="text-gray-10" />
+          <Text numberOfLines={1} className="font-pretendard text-h2 text-white">
+            {plan.confirmed.place.name}
+          </Text>
+        </View>
+      </View>
+
+      {/* 점선. 피그마는 길이 4.03의 선과 같은 길이의 틈이 반복된다. */}
+      <Svg
+        height={1}
+        className="absolute text-gray-20"
+        style={{ left: DASH.inset, right: DASH.inset, top: DASH.top }}>
+        <Line
+          x1="0"
+          y1="0.5"
+          x2="100%"
+          y2="0.5"
+          stroke="currentColor"
+          strokeOpacity={DASH.opacity}
+          strokeDasharray={[DASH.dash, DASH.dash]}
+        />
+      </Svg>
+
+      <View
+        className="absolute flex-row items-center"
+        style={{ left: FACES.left, top: FACES.top, gap: FACES.gap }}>
+        {faces.map((m) => (
+          <AvatarCircle
+            key={m.id}
+            name={m.name}
+            photo={m.avatarUrl ? { uri: m.avatarUrl } : undefined}
+            size={FACES.size}
+          />
+        ))}
+      </View>
+
+      {others > 0 ? (
+        <View
+          className="absolute flex-row items-center gap-[8px]"
+          style={{ right: MORE.right, bottom: MORE.bottom }}>
+          <Text
+            className="font-pretendard text-white"
+            style={{ fontSize: MORE.fontSize, lineHeight: MORE.lineHeight }}>
+            외 {others}명
+          </Text>
+          {/* 피그마의 작은 꺾쇠(5 × 8). 아이콘 묶음의 chevron-right보다 작고 선이 굵어 그대로 옮겼다. */}
+          <Svg width={5.65} height={9.25} viewBox="0 0 5.64924 9.25005" className="text-white">
+            <Path
+              d="M0.625023 0.625023L4.64894 3.84415C5.14934 4.24448 5.14934 5.00557 4.64894 5.40589L0.625023 8.62502"
+              stroke="currentColor"
+              strokeWidth={1.25}
+              strokeLinecap="round"
+              fill="none"
+            />
+          </Svg>
+        </View>
+      ) : null}
+    </Pressable>
+  );
+}
