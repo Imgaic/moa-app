@@ -10,6 +10,7 @@ import { PlaceSearch } from '@/components/place/PlaceSearch';
 import { PageTitle } from '@/components/ui/PageTitle';
 import { TopBar } from '@/components/ui/TopBar';
 import { usePlaceSearch } from '@/hooks/usePlaceSearch';
+import { useScrollEndPadding } from '@/hooks/useScrollEndPadding';
 import { notify } from '@/lib/dialogs';
 
 // 약속 만들기와 같은 위치(2026-11-18). 상단 바 아래 20에 제목, 제목 아래 46에 검색 칸.
@@ -19,6 +20,7 @@ const BODY_TOP = 46;
 export default function ProposePlace() {
   const { planId } = useLocalSearchParams<{ planId: string }>();
   const { query, changeQuery, places } = usePlaceSearch();
+  const scrollEndPadding = useScrollEndPadding();
   const [sending, setSending] = useState(false);
 
   const propose = async (place: Place) => {
@@ -39,8 +41,8 @@ export default function ProposePlace() {
       <TopBar type="back" onBack={() => router.back()} />
       <ScrollView
         className="flex-1"
-        contentContainerClassName="px-[32px] pb-[24px]"
-        contentContainerStyle={{ paddingTop: TITLE_TOP }}
+        contentContainerClassName="px-[32px]"
+        contentContainerStyle={{ paddingTop: TITLE_TOP, paddingBottom: scrollEndPadding }}
         keyboardShouldPersistTaps="handled">
         <PageTitle title="장소 제안" subtitle="함께 갈 만한 장소를 검색하세요" />
         <View style={{ marginTop: BODY_TOP }}>

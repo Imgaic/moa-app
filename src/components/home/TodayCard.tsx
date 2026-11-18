@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Line, Path } from 'react-native-svg';
 
@@ -5,6 +6,7 @@ import { Avatar } from '@/components/ui/Avatar';
 import { Icon } from '@/components/ui/Icon';
 import { Svg } from '@/components/ui/Svg';
 import { longDateText, timeText } from '@/lib/dateText';
+import { fittingCount } from '@/lib/fittingCount';
 import type { ConfirmedPlan } from '@/lib/homePlans';
 import { planLabel } from '@/lib/planLabel';
 
@@ -22,8 +24,11 @@ const WHEN = { left: 32, top: 86, right: 28, gap: 30 };
 const DIVIDER_HEIGHT = 30;
 const PIN_SIZE = 20;
 const DASH = { inset: 28, top: 150, dash: 4.0256, opacity: 0.6 };
-const FACES = { left: 28, top: 168, gap: 12, size: 50, max: 4 };
-const MORE = { right: 19, bottom: 28, fontSize: 13, lineHeight: 16 };
+// 얼굴 줄과 "외 N명"이 양 끝에 놓이는 맨 아래 줄
+const FOOT = { left: 28, right: 19, top: 168 };
+const FACES = { gap: 12, size: 50, max: 4 };
+// left: 얼굴과 붙지 않게 두는 틈. bottom: 피그마에서 글자가 얼굴 줄의 바닥보다 8 위에 있다.
+const MORE = { left: 12, bottom: 8, fontSize: 13, lineHeight: 16 };
 const SUB_OPACITY = 0.8;
 
 type TodayCardProps = {
@@ -36,7 +41,11 @@ type TodayCardProps = {
 export function TodayCard({ plan, now, onPress }: TodayCardProps) {
   const startsAt = new Date(plan.confirmed.startsAt);
   const label = planLabel(plan, now);
-  const faces = plan.members.slice(0, FACES.max);
+  // 화면이 좁으면 얼굴이 "외 N명"과 겹치므로, 얼굴 줄의 너비에 들어가는 만큼만 그리고 나머지는 "외 N명"에 더한다.
+  // 너비를 재기 전(null)에는 피그마 너비 기준으로 최대 수를 그린다.
+  const [facesWidth, setFacesWidth] = useState<number | null>(null);
+  const faceCount = facesWidth === null ? FACES.max : fittingCount({ width: facesWidth, ...FACES });
+  const faces = plan.members.slice(0, faceCount);
   const others = plan.members.length - faces.length;
 
   return (
@@ -123,40 +132,43 @@ export function TodayCard({ plan, now, onPress }: TodayCardProps) {
         />
       </Svg>
 
-      <View
-        className="absolute flex-row items-center"
-        style={{ left: FACES.left, top: FACES.top, gap: FACES.gap }}>
-        {faces.map((m) => (
-          <Avatar
-            key={m.id}
-            name={m.name}
-            photo={m.avatarUrl ? { uri: m.avatarUrl } : undefined}
-            size={FACES.size}
-          />
-        ))}
-      </View>
-
-      {others > 0 ? (
+      <View className="absolute flex-row items-end" style={FOOT}>
         <View
-          className="absolute flex-row items-center gap-[8px]"
-          style={{ right: MORE.right, bottom: MORE.bottom }}>
-          <Text
-            className="font-pretendard text-white"
-            style={{ fontSize: MORE.fontSize, lineHeight: MORE.lineHeight }}>
-            외 {others}명
-          </Text>
-          {/* 피그마의 작은 꺾쇠(5 × 8). 아이콘 묶음의 chevron-right보다 작고 선이 굵어 그대로 옮겼다. */}
-          <Svg width={5.65} height={9.25} viewBox="0 0 5.64924 9.25005" className="text-white">
-            <Path
-              d="M0.625023 0.625023L4.64894 3.84415C5.14934 4.24448 5.14934 5.00557 4.64894 5.40589L0.625023 8.62502"
-              stroke="currentColor"
-              strokeWidth={1.25}
-              strokeLinecap="round"
-              fill="none"
+          className="flex-1 flex-row"
+          style={{ gap: FACES.gap }}
+          onLayout={(event) => setFacesWidth(event.nativeEvent.layout.width)}>
+          {faces.map((m) => (
+            <Avatar
+              key={m.id}
+              name={m.name}
+              photo={m.avatarUrl ? { uri: m.avatarUrl } : undefined}
+              size={FACES.size}
             />
-          </Svg>
+          ))}
         </View>
-      ) : null}
+
+        {others > 0 ? (
+          <View
+            className="flex-row items-center gap-[8px]"
+            style={{ marginLeft: MORE.left, marginBottom: MORE.bottom }}>
+            <Text
+              className="font-pretendard text-white"
+              style={{ fontSize: MORE.fontSize, lineHeight: MORE.lineHeight }}>
+              외 {others}명
+            </Text>
+            {/* 피그마의 작은 꺾쇠(5 × 8). 아이콘 묶음의 chevron-right보다 작고 선이 굵어 그대로 옮겼다. */}
+            <Svg width={5.65} height={9.25} viewBox="0 0 5.64924 9.25005" className="text-white">
+              <Path
+                d="M0.625023 0.625023L4.64894 3.84415C5.14934 4.24448 5.14934 5.00557 4.64894 5.40589L0.625023 8.62502"
+                stroke="currentColor"
+                strokeWidth={1.25}
+                strokeLinecap="round"
+                fill="none"
+              />
+            </Svg>
+          </View>
+        ) : null}
+      </View>
     </Pressable>
   );
 }
