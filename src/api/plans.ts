@@ -4,7 +4,7 @@
 import type { DateKey } from '@/lib/monthGrid';
 import { addMockPlan, findMockPlan, mockInviteLink, mockPlans } from '@/mocks/plans';
 
-import { getMe } from './me';
+import { getMe, getSignedInMe } from './me';
 import type { Place } from './places';
 
 export type PlanStatus = 'collecting' | 'recommended' | 'confirmed' | 'past';
@@ -53,10 +53,12 @@ export type CreatedPlan = { plan: PlanDetail; inviteLink: string };
 
 const wait = () => new Promise((resolve) => setTimeout(resolve, MOCK_DELAY_MS));
 
-// 내가 참여한 약속 목록
+// 내가 참여한 약속 목록. 로그인하지 않았으면 빈 목록이다.
 export async function getPlans(): Promise<Plan[]> {
+  const me = await getSignedInMe();
   await wait();
-  return mockPlans(new Date());
+  if (!me) return [];
+  return mockPlans(new Date()).filter((plan) => plan.members.some((member) => member.id === me.id));
 }
 
 // 약속 하나. 없는 약속이면 null이다.
