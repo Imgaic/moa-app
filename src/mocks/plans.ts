@@ -133,6 +133,14 @@ export function addMockMember(planId: string, member: Member) {
   plan.members = [...plan.members, member];
 }
 
+// 온보딩에서 프로필을 정하면 모든 가짜 약속의 그 사람 자리에 새 이름과 사진을 넣는다.
+// markMockSubmitted처럼 화면이 바뀐 것을 알도록 멤버 목록을 새로 만든다.
+export function updateMockPerson(person: Pick<Member, 'id' | 'name' | 'avatarUrl'>) {
+  mockPlans(new Date()).forEach((plan) => {
+    plan.members = plan.members.map((member) => (member.id === person.id ? { ...member, ...person } : member));
+  });
+}
+
 function createMockPlans(now: Date): PlanDetail[] {
   const decided = { hostId: MOCK_ME.id, dateRange: daysFrom(now, 0, 14), durationMinutes: 120 };
   const recommendPlace = { placeMode: 'recommend', fixedPlace: null } as const;

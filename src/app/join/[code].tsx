@@ -2,36 +2,25 @@
 // 이 화면은 api로 초대와 "나"를 불러와 단계를 고르고, 참여하면 약속 허브로 바꿔 간다(뒤로 가기 기록에 남기지 않는다).
 // 로그인돼 있으면 초대 단계만, 아니면 프로필(이름, 사진)을 먼저 받고 초대 단계로 간다. 이미 멤버면 묻지 않고 허브로 간다.
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
-import {
-  ActivityIndicator,
-  Keyboard,
-  KeyboardAvoidingView,
-  ScrollView,
-  Text,
-  View,
-  type ScrollViewInstance,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, KeyboardAvoidingView, Text } from 'react-native';
 
 import { getInvitation, joinPlan, type Invitation } from '@/api/invitations';
 import { getSignedInMe, type GuestProfile } from '@/api/me';
 import { InviteCard } from '@/components/join/InviteCard';
-import { ProfileForm } from '@/components/join/ProfileForm';
+import { ProfileForm } from '@/components/profile/ProfileForm';
 import { Button } from '@/components/ui/Button';
-import { PageTitle } from '@/components/ui/PageTitle';
+import { StepLayout } from '@/components/ui/StepLayout';
 import { TopBar } from '@/components/ui/TopBar';
 import { notify } from '@/lib/dialogs';
 import { invitedTitle } from '@/lib/joinText';
 import { pickPhoto } from '@/lib/pickPhoto';
 import { isNameValid } from '@/lib/profileName';
+import { useAuthStage } from '@/stores/authStage';
 
-// 피그마 기준 위치(2026-11-18). 상단 바 아래 20에 제목. 제목 아래 본문(초대 카드 34, 프로필 61).
-// 버튼은 좌우 23.5, 아래는 홈 인디케이터 위 3.
-const TITLE_TOP = 20;
+// 피그마 기준 위치(2026-11-18). 제목 아래 본문(초대 카드 34, 프로필 61).
 const INVITE_BODY_TOP = 34;
 const PROFILE_BODY_TOP = 61;
-const BUTTON_BOTTOM = 3;
 
 type Loaded =
   | { state: 'loading' }
@@ -93,6 +82,7 @@ type JoinStepsProps = {
 function JoinSteps({ invitation, signedIn, step, onNext }: JoinStepsProps) {
   const [profile, setProfile] = useState<GuestProfile>({ name: '', photoUri: null });
   const [joining, setJoining] = useState(false);
+  const refreshAuthStage = useAuthStage((state) => state.refresh);
   const host = invitation.members.find((member) => member.id === invitation.hostId);
 
   const choosePhoto = async () => {
@@ -108,6 +98,8 @@ function JoinSteps({ invitation, signedIn, step, onNext }: JoinStepsProps) {
     setJoining(true);
     try {
       await joinPlan(invitation.id, signedIn ? undefined : { ...profile, name: profile.name.trim() });
+      // 익명 게스트가 됐으면 허브가 열리도록 로그인 단계를 다시 읽는다(src/app/_layout.tsx).
+      await refreshAuthStage();
       openHub(invitation.id);
     } catch {
       setJoining(false);
@@ -138,42 +130,5 @@ function JoinSteps({ invitation, signedIn, step, onNext }: JoinStepsProps) {
       button={<Button label="참여하기" disabled={joining} onPress={join} />}>
       <InviteCard invitation={invitation} />
     </StepLayout>
-  );
-}
-
-type StepLayoutProps = {
-  title: string;
-  subtitle?: string;
-  bodyTop: number;
-  button: ReactNode;
-  children: ReactNode;
-};
-
-// 위에 제목과 본문(스크롤), 맨 아래 버튼. 키보드가 올라오면 버튼이 키보드 위로 올라간다.
-function StepLayout({ title, subtitle, bodyTop, button, children }: StepLayoutProps) {
-  const { bottom } = useSafeAreaInsets();
-  const scroll = useRef<ScrollViewInstance>(null);
-
-  // 이름 칸이 본문 맨 아래라, 키보드가 올라와 본문이 줄어들면 끝까지 내려 칸이 버튼 뒤로 숨지 않게 한다.
-  useEffect(() => {
-    const subscription = Keyboard.addListener('keyboardDidShow', () => scroll.current?.scrollToEnd());
-    return () => subscription.remove();
-  }, []);
-
-  return (
-    <>
-      <ScrollView
-        ref={scroll}
-        className="flex-1"
-        contentContainerClassName="px-[32px] pb-[24px]"
-        contentContainerStyle={{ paddingTop: TITLE_TOP }}
-        keyboardShouldPersistTaps="handled">
-        <PageTitle title={title} subtitle={subtitle} />
-        <View style={{ marginTop: bodyTop }}>{children}</View>
-      </ScrollView>
-      <View className="px-[23.5px]" style={{ paddingBottom: bottom + BUTTON_BOTTOM }}>
-        {button}
-      </View>
-    </>
   );
 }

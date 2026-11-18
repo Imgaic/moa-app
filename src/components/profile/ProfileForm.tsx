@@ -4,9 +4,9 @@ import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
 import { TextField } from '@/components/ui/TextField';
 import { NAME_MAX_LENGTH } from '@/lib/profileName';
 
-// 피그마 04 Join / Profile - Empty, Filled (2026-11-18 기준)의 본문: 프로필 동그라미와 이름 칸.
-// 이름을 넣으면 동그라미에 이름 뒤 두 글자가 보인다(docs/open-questions.md T7, T8).
-// 온보딩의 프로필 화면(01 Onboarding / Profile)과 모양이 비슷해, 그때 다시 쓸 수 있게 값과 동작은 모두 props로 받는다.
+// 프로필 동그라미와 이름 칸. 참여 화면(피그마 04 Join / Profile - Empty, Filled)과
+// 온보딩 프로필 화면(01 Onboarding / Profile, Focused, Photo Added)이 같이 쓴다(2026-11-18 기준 두 피그마가 같다).
+// 이름을 넣으면 동그라미에 이름 뒤 두 글자가 보인다(docs/open-questions.md T7, T8). 값과 동작은 모두 props로 받는다.
 const NAME_TOP = 51;
 
 type ProfileFormProps = {

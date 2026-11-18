@@ -25,6 +25,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { SocialButton } from '@/components/ui/SocialButton';
 import { SummaryItem } from '@/components/ui/SummaryItem';
 import { TabBar, TabItem, type TabIcon } from '@/components/ui/TabBar';
+import { TermsItem } from '@/components/ui/TermsItem';
 import { TextField } from '@/components/ui/TextField';
 import { TimeBar } from '@/components/ui/TimeBar';
 import { Toggle } from '@/components/ui/Toggle';
@@ -154,6 +155,9 @@ export default function TokenSamples() {
   const [checkOn, setCheckOn] = useState(true);
   const [blackOff, setBlackOff] = useState(false);
   const [blackOn, setBlackOn] = useState(true);
+  const [termOff, setTermOff] = useState(false);
+  const [termOn, setTermOn] = useState(true);
+  const [termNoArrow, setTermNoArrow] = useState(false);
   const [name, setName] = useState('나해진');
   const [groupName, setGroupName] = useState('');
   const [labeled, setLabeled] = useState('');
@@ -218,6 +222,22 @@ export default function TokenSamples() {
             />
             <Checkbox checked={blackOn} onChange={setBlackOn} tone="black" accessibilityLabel="견본 4" />
           </View>
+        </Section>
+
+        <Section title="TermsItem (동의 전, 동의 + 설명, 화살표 없음)">
+          <TermsItem title="[필수] 서비스 이용약관" checked={termOff} onPress={() => setTermOff(!termOff)} />
+          <TermsItem
+            title="[선택] 내 캘린더 일정 불러오기"
+            description="시간 고를 때 내 일정을 같이 보여줘요"
+            checked={termOn}
+            onPress={() => setTermOn(!termOn)}
+          />
+          <TermsItem
+            title="[필수] 만 14세 이상이에요"
+            checked={termNoArrow}
+            showArrow={false}
+            onPress={() => setTermNoArrow(!termNoArrow)}
+          />
         </Section>
 
         <Section title="TextField (Filled, Empty)">

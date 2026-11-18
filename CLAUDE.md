@@ -20,7 +20,7 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 - `src/hooks/`: 커스텀 훅
 - `src/constants/`: 테마, 상수
 - `src/lib/`: 순수 로직(빈 시간 계산, 달력 칸 계산 등). UI와 분리해 테스트한다. 테스트 파일은 옆에 `*.test.ts`로 둔다.
-- `src/stores/`: Zustand 스토어
+- `src/stores/`: Zustand 스토어. 여러 화면이 같은 값을 보고 바뀐 것을 알아야 할 때만 만든다. `authStage.ts`: 로그인 단계(루트 레이아웃의 보호된 라우트가 읽는다. 원본은 `src/api/auth.ts`)
 - `src/api/`: 서버 호출. 백엔드가 나오기 전까지는 `src/mocks/`의 가짜 데이터를 돌려준다.
 - `src/mocks/`: 가짜 데이터
 
@@ -99,8 +99,10 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | badge (회색 알약) | `src/components/ui/Badge.tsx`의 `GrayBadge` | 2026-11-18 | label. 출발지 줄 오른쪽, 막대 아래 |
 | Avatar (카메라 버튼이 붙은 큰 프로필) | `src/components/ui/ProfileAvatar.tsx` | 2026-11-18 | `Avatar`(186) + 안쪽 그림자 + Button/Camera. Empty면 "이름". name, photo, onPressCamera |
 | Card/Invite | `src/components/join/InviteCard.tsx` | 2026-11-18 | `Invitation`을 받는다. 얼굴 3명(호스트 먼저) + 줄 4개. Card/Summary(`PlanSummaryCard`)와 다른 카드 |
-| (참여 화면의 프로필 입력) | `src/components/join/ProfileForm.tsx` | 2026-11-18 | `ProfileAvatar` + 이름 `TextField`. 온보딩 프로필에서 다시 쓸 수 있게 값은 props로 |
+| (참여·온보딩 화면의 프로필 입력) | `src/components/profile/ProfileForm.tsx` | 2026-11-18 | `ProfileAvatar` + 이름 `TextField`. 참여 화면과 온보딩 프로필 화면이 같이 쓴다. 값은 props로 |
 | Card/Candidate | `src/components/ui/CandidateCard.tsx` | 2026-11-18 | badge, best(Type=Best), title, attendance, everyone(Attendance=All), detail, checked, onPress(없으면 못 누름). 글자는 `src/lib/candidateText.ts`. 제목 두 줄까지, 배지 최소 너비 48 |
 | (허브 추천 나옴 내용) | `src/components/plan-hub/RecommendedContent.tsx` | 2026-11-18 | 05 Hub / Host - Recommended - Empty·Voting·Voted. 버튼 규칙은 `src/lib/voteStatus.ts`, 확정 규칙(T2)은 `src/lib/voteResult.ts` |
 | 09 Confirm / Done (Illustration/Done 포함) | `src/components/plan-hub/ConfirmedNotice.tsx` | 2026-11-18 | 허브 위에 덮는 화면. 2.5초 뒤 또는 누르면 닫힘. 보일지는 `src/lib/confirmedNotice.ts` |
 | (확정 허브, 임시 T4) | `src/components/plan-hub/ConfirmedContent.tsx` | 2026-11-18 | 디자인 없음. List/Summary Item + List/Member Row로 일시, 시간, 장소, 참가자 |
+| List/Terms Item | `src/components/ui/TermsItem.tsx` | 2026-11-18 | title, description, checked, onPress, showArrow. 줄 전체를 누르면 체크. 화살표는 누를 수 없는 표시(약관 내용 화면 없음). 규칙은 `src/lib/termsAgreement.ts`, 항목은 `src/constants/terms.ts` |
+| (제목 + 본문 + 아래 버튼 화면 틀) | `src/components/ui/StepLayout.tsx` | 2026-11-18 | 피그마 컴포넌트 아님. 참여, 약관, 프로필 화면이 같이 쓴다. title, subtitle, bodyTop, button, children |
