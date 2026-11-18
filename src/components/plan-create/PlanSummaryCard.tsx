@@ -1,7 +1,7 @@
 import { Pressable, Text, View } from 'react-native';
 
 import type { NewPlan, PlanMember } from '@/api/plans';
-import { AvatarCircle } from '@/components/ui/Avatar';
+import { Avatar } from '@/components/ui/Avatar';
 import { SummaryItem } from '@/components/ui/SummaryItem';
 import { dateRangeText, durationText } from '@/lib/planCreateText';
 
@@ -24,7 +24,7 @@ export function PlanSummaryCard({ plan, host, onEdit }: PlanSummaryCardProps) {
   return (
     <View className={CARD}>
       <View className="flex-row items-center gap-[14px]">
-        <AvatarCircle
+        <Avatar
           name={host?.name ?? ''}
           photo={host?.avatarUrl ? { uri: host.avatarUrl } : undefined}
           size={AVATAR_SIZE}

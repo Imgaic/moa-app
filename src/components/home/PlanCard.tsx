@@ -1,7 +1,7 @@
 import { Pressable, Text, View } from 'react-native';
 
 import type { Plan } from '@/api/plans';
-import { AvatarCircle } from '@/components/ui/Avatar';
+import { Avatar } from '@/components/ui/Avatar';
 import { Icon } from '@/components/ui/Icon';
 import { shortDateText, timeText } from '@/lib/dateText';
 import { planLabel } from '@/lib/planLabel';
@@ -92,7 +92,7 @@ export function PlanCard({ plan, now, onPress }: PlanCardProps) {
           key={m.id}
           className="absolute"
           style={{ top: AVATAR.top, right: AVATAR.right + i * AVATAR.overlap }}>
-          <AvatarCircle
+          <Avatar
             name={m.name}
             photo={m.avatarUrl ? { uri: m.avatarUrl } : undefined}
             size={AVATAR.size}

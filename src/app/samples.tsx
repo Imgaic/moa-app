@@ -1,9 +1,9 @@
 // 토큰과 UI 컴포넌트 견본을 보는 개발용 임시 화면이다. 주소(/samples)로만 연다. 실제 화면이 다 만들어지면 지운다.
 import { useState, type ReactNode } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { GroupAvatar, MapPinAvatar, MemberAvatar, ProfileAvatar } from '@/components/ui/Avatar';
+import { Avatar } from '@/components/ui/Avatar';
 import { ProgressBadge, Tooltip } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Checkbox } from '@/components/ui/Checkbox';
@@ -90,7 +90,6 @@ export default function TokenSamples() {
   const [groupName, setGroupName] = useState('');
   const [labeled, setLabeled] = useState('');
   const [tab, setTab] = useState<TabIcon>('home');
-  const [memberDone, setMemberDone] = useState(true);
   const [option, setOption] = useState<'recommend' | 'fixed'>('fixed');
   const [range, setRange] = useState(EMPTY_RANGE);
 
@@ -236,41 +235,14 @@ export default function TokenSamples() {
           </View>
         </Section>
 
-        <Section title="Avatar (Empty: 이름 뒤 두 글자, Filled: 사진)">
-          <View className="flex-row flex-wrap">
-            <ProfileAvatar name="나해진" />
-            <ProfileAvatar name="나해진" photo={samplePhoto} />
-          </View>
-        </Section>
-
-        <Section title="Avatar/Member · 첫 번째를 누르면 입력 완료 표시가 바뀐다">
-          <View className="flex-row flex-wrap items-start gap-5">
-            <Pressable onPress={() => setMemberDone((v) => !v)}>
-              <MemberAvatar name="해진" photo={samplePhoto} checked={memberDone} />
-            </Pressable>
-            <MemberAvatar name="나해진" status="입력 중" />
-            <MemberAvatar name="진" checked />
-            <MemberAvatar name="" />
-            <MemberAvatar name="나해진" showName={false} />
-          </View>
-        </Section>
-
-        <Section title="Avatar/Group (사진, 이름 글자)">
-          <View className="flex-row flex-wrap gap-3">
-            <GroupAvatar
-              members={[
-                { name: '김민수', photo: samplePhoto },
-                { name: '나해진', photo: samplePhoto },
-              ]}
-            />
-            <GroupAvatar members={[{ name: '김민수' }, { name: '나해진' }]} />
-          </View>
-        </Section>
-
-        <Section title="Avatar/Map Pin (사진 + 체크, 이름 글자)">
-          <View className="flex-row gap-5 bg-white p-3">
-            <MapPinAvatar name="해진" photo={samplePhoto} label="수원역" checked />
-            <MapPinAvatar name="나해진" label="강남역" />
+        <Section title="Avatar (이름 뒤 두 글자, 사진, 빈 이름 · 지름 50, 128 · 테두리)">
+          <View className="flex-row flex-wrap items-center gap-3">
+            <Avatar name="나해진" size={50} />
+            <Avatar name="나해진" photo={samplePhoto} size={50} />
+            <Avatar name="" size={50} />
+            <Avatar name="나해진" size={50} borderWidth={1.5} className="border-gray-20" />
+            <Avatar name="나해진" size={128} />
+            <Avatar name="나해진" photo={samplePhoto} size={128} />
           </View>
         </Section>
 

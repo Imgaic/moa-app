@@ -64,6 +64,7 @@
 - 2026-11-18, feat/plan-create: 장소 방식을 "추천 받을래요"로 바꿔도 골라 둔 장소는 지우지 않는다(다시 "정해져 있어요"를 고르면 남아 있다). 보낼 때는 추천받기면 `fixedPlace`를 null로 보낸다.
 - 2026-11-18, feat/plan-create: 새 약속은 앱이 켜져 있는 동안만 가짜 저장소(`src/mocks/plans.ts`)에 남고, 홈 목록 맨 앞(확정 전 약속 중 맨 앞)에 보인다. 홈은 화면에 돌아올 때마다 목록을 다시 불러온다.
 - 2026-11-18, feat/plan-create: 피그마 Card/Option의 카드 사이 간격 16, Summary/Create의 줄마다 위 구분선을 그대로 따랐다. 글자 줄 높이(크기 × 1.2)가 피그마(100%)보다 커서 세로 위치가 1~2씩 다르다.
+- 2026-11-18, refactor/avatar-and-platform-fixes: `Avatar`는 프로필 동그라미 하나만 맡는다. 카메라 버튼이 붙은 프로필(피그마 Avatar), Avatar/Member(입력 완료 체크), Avatar/Group, Avatar/Map Pin은 쓰는 화면이 없어 지웠다. 쓰는 화면이 생기면 `Avatar`를 쓰는 별도 컴포넌트로 만든다. 지우기 전 코드는 커밋 `278eee7`의 `src/components/ui/Avatar.tsx`에 있다.
 
 ## 3. 디자이너에게 물어볼 것
 

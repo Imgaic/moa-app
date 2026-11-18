@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { Circle, Path } from 'react-native-svg';
 
 import { Svg } from './Svg';
@@ -11,6 +11,12 @@ const LINE = { strokeWidth: 1.5, strokeLinecap: 'round', strokeLinejoin: 'round'
 // 탭 아이콘(home, calendar, user)은 피그마 원본이 30.24 칸에 그려져 있어 그 좌표계를 그대로 쓴다.
 const TAB_BOX = 30.24;
 const TAB_LINE = { ...LINE, strokeWidth: 1.8954 } as const;
+// 화면 낭독기에서 숨긴다. 웹의 react-native-svg는 받은 속성을 <svg>에 그대로 넘겨서,
+// RN 전용 속성(accessibilityElementsHidden 등)을 주면 React 경고와 hydration 불일치가 난다.
+const HIDDEN_FROM_SCREEN_READER =
+  Platform.OS === 'web'
+    ? { 'aria-hidden': true }
+    : { accessibilityElementsHidden: true, importantForAccessibility: 'no-hide-descendants' as const };
 
 const ICONS = {
   bus: (
@@ -177,8 +183,7 @@ export function Icon({ name, size = DEFAULT_SIZE, className = 'text-gray-50' }: 
       height={size}
       viewBox={`0 0 ${box} ${box}`}
       className={className}
-      accessibilityElementsHidden
-      importantForAccessibility="no-hide-descendants">
+      {...HIDDEN_FROM_SCREEN_READER}>
       {ICONS[name]}
     </Svg>
   );
