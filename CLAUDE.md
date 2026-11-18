@@ -100,7 +100,7 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | Avatar (카메라 버튼이 붙은 큰 프로필) | `src/components/ui/ProfileAvatar.tsx` | 2026-11-18 | `Avatar`(186) + 안쪽 그림자 + Button/Camera. Empty면 "이름". name, photo, onPressCamera |
 | Card/Invite | `src/components/join/InviteCard.tsx` | 2026-11-18 | `Invitation`을 받는다. 얼굴 3명(호스트 먼저) + 줄 4개. Card/Summary(`PlanSummaryCard`)와 다른 카드 |
 | (참여·온보딩 화면의 프로필 입력) | `src/components/profile/ProfileForm.tsx` | 2026-11-18 | `ProfileAvatar` + 이름 `TextField`. 참여 화면과 온보딩 프로필 화면이 같이 쓴다. 값은 props로 |
-| Card/Candidate | `src/components/ui/CandidateCard.tsx` | 2026-11-18 | badge, best(Type=Best), title, attendance, everyone(Attendance=All), detail, checked, onPress(없으면 못 누름). 글자는 `src/lib/candidateText.ts`. 제목 두 줄까지, 배지 최소 너비 48 |
+| Card/Candidate | `src/components/ui/CandidateCard.tsx` | 2026-11-18 | badge, best(Type=Best), dateTime, place(제목. 줄은 둘 사이에서 바뀐다, `src/lib/unbreakableText.ts`), attendance, everyone(Attendance=All), detail, checked, onPress(없으면 못 누름). 글자는 `src/lib/candidateText.ts`. 제목 두 줄까지, 배지 최소 너비 48 |
 | (허브 추천 나옴 내용) | `src/components/plan-hub/RecommendedContent.tsx` | 2026-11-18 | 05 Hub / Host - Recommended - Empty·Voting·Voted. 버튼 규칙은 `src/lib/voteStatus.ts`, 확정 규칙(T2)은 `src/lib/voteResult.ts` |
 | 09 Confirm / Done (Illustration/Done 포함) | `src/components/plan-hub/ConfirmedNotice.tsx` | 2026-11-18 | 허브 위에 덮는 화면. 2.5초 뒤 또는 누르면 닫힘. 보일지는 `src/lib/confirmedNotice.ts` |
 | (확정 허브, 임시 T4) | `src/components/plan-hub/ConfirmedContent.tsx` | 2026-11-18 | 디자인 없음. List/Summary Item + List/Member Row로 일시, 시간, 장소, 참가자 |

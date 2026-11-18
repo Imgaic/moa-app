@@ -14,9 +14,11 @@ import { planLabel } from '@/lib/planLabel';
 // 피그마의 얼굴 테두리 링(파란 호)은 멤버별 이동 진척도로 보이는데 범위가 미정이라(Q8) 그리지 않았다.
 const CARD = { height: 238, radius: 16 };
 const NOTCH = { radius: 16, centerY: 143 };
-const HEAD = { left: 32, top: 17 };
+// right: 제목이 길어도 오른쪽 위 라벨(가장 긴 "23시간 후")과 겹치지 않게 비워 두는 너비
+const HEAD = { left: 32, top: 17, right: 96 };
 const BADGE = { right: 19, top: 24, fontSize: 10, lineHeight: 12 };
-const WHEN = { left: 32, top: 86, gap: 30 };
+// right: 장소 이름이 길면 카드 안쪽 여백에서 "…"로 줄도록 오른쪽 끝을 정한다(점선의 안쪽 여백과 같다).
+const WHEN = { left: 32, top: 86, right: 28, gap: 30 };
 const DIVIDER_HEIGHT = 30;
 const PIN_SIZE = 20;
 const DASH = { inset: 28, top: 150, dash: 4.0256, opacity: 0.6 };
@@ -87,7 +89,7 @@ export function TodayCard({ plan, now, onPress }: TodayCardProps) {
 
       <View
         className="absolute flex-row items-end"
-        style={{ left: WHEN.left, top: WHEN.top, gap: WHEN.gap }}>
+        style={WHEN}>
         <View className="gap-[4px]">
           <Text
             className="font-pretendard text-caption-14 text-white"
@@ -97,9 +99,9 @@ export function TodayCard({ plan, now, onPress }: TodayCardProps) {
           <Text className="font-pretendard text-h2 text-white">{timeText(startsAt)}</Text>
         </View>
         <View className="mb-[2px] w-px bg-gray-20" style={{ height: DIVIDER_HEIGHT }} />
-        <View className="flex-row items-center gap-[8px]">
-          <Icon name="pin-fill" size={PIN_SIZE} className="text-gray-10" />
-          <Text numberOfLines={1} className="font-pretendard text-h2 text-white">
+        <View className="shrink flex-row items-center gap-[8px]">
+          <Icon name="pin-fill" size={PIN_SIZE} className="shrink-0 text-gray-10" />
+          <Text numberOfLines={1} className="shrink font-pretendard text-h2 text-white">
             {plan.confirmed.place.name}
           </Text>
         </View>

@@ -42,7 +42,8 @@ describe('candidateCardText', () => {
     expect(candidateCardText(first, candidates, members)).toEqual({
       badge: '추천 1',
       best: true,
-      title: '4월 1일 (수) 오후 7:00 사당역',
+      dateTime: '4월 1일 (수) 오후 7:00',
+      place: '사당역',
       attendance: '4명 모두',
       everyone: true,
       detail: '· 평균 38분 · 최대 42분',
@@ -53,7 +54,8 @@ describe('candidateCardText', () => {
     const text = candidateCardText(second, candidates, members);
     expect(text.badge).toBe('추천 2');
     expect(text.best).toBe(false);
-    expect(text.title).toBe('4월 22일 (수) 오후 2:00 강남역');
+    expect(text.dateTime).toBe('4월 22일 (수) 오후 2:00');
+    expect(text.place).toBe('강남역');
     expect(text.attendance).toBe('3명 가능 · 동하 제외');
     expect(text.everyone).toBe(false);
   });

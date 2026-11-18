@@ -1,4 +1,4 @@
-// 후보 카드(피그마 Card/Candidate)에 보이는 글자: 배지, 날짜·시각·장소, 참석 인원, 이동시간.
+// 후보 카드(피그마 Card/Candidate)에 보이는 글자: 배지, 날짜·시각, 장소, 참석 인원, 이동시간.
 // 날짜·시각 글자(dateTimeText)는 확정 허브도 쓴다.
 import type { Candidate } from '@/api/candidates';
 import type { PlanMember } from '@/api/plans';
@@ -20,8 +20,10 @@ export type CandidateCardText = {
   badge: string;
   // 첫 번째 추천 후보. 배지가 검은색이다(피그마 Type=Best).
   best: boolean;
-  // "4월 1일 (수) 오후 7:00 사당역"
-  title: string;
+  // "4월 1일 (수) 오후 7:00"
+  dateTime: string;
+  // "사당역"
+  place: string;
   // "4명 모두" 또는 "3명 가능 · 동하 제외"
   attendance: string;
   // 모두 올 수 있으면 참석 글자가 파란색이다(피그마 Attendance=All).
@@ -41,7 +43,8 @@ export function candidateCardText(
   return {
     badge: candidate.source === 'recommended' ? `추천 ${rank}` : proposedByText(candidate.proposedBy ?? '', members),
     best: candidate.source === 'recommended' && rank === 1,
-    title: `${dateTimeText(new Date(candidate.startsAt))} ${candidate.place.name}`,
+    dateTime: dateTimeText(new Date(candidate.startsAt)),
+    place: candidate.place.name,
     attendance: attendanceText(candidate.attendeeIds.length, absent),
     everyone: absent.length === 0,
     detail: `· 평균 ${durationText(candidate.avgMinutes)} · 최대 ${durationText(candidate.maxMinutes)}`,
