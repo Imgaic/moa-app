@@ -80,7 +80,7 @@ export function seedMockCandidates(plan: PlanDetail) {
   });
 }
 
-// 한 사람은 한 후보에만 투표한다. 화면이 바뀐 것을 알도록 후보 목록을 새로 만든다.
+// 한 사람은 한 후보에만 투표한다. 이미 투표했으면 이전 표를 빼고 옮긴다(T13). 화면이 바뀐 것을 알도록 후보 목록을 새로 만든다.
 export function voteMock(planId: string, candidateId: string, memberId: string) {
   const updated = mockCandidates(planId).map((candidate) => {
     const others = candidate.voterIds.filter((id) => id !== memberId);

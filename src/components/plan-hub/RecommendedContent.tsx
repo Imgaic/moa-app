@@ -14,7 +14,7 @@ import { HubMembers } from './HubMembers';
 import { MembersModal } from './MembersModal';
 
 // 약속 허브의 추천 나옴 내용 (피그마 05 Hub / Host - Recommended - Empty·Voting·Voted, 2026-11-18 기준).
-// 멤버 영역(투표 현황), 추천 후보 목록, 맨 아래 버튼(투표하기 / 호스트의 투표 마감하기).
+// 멤버 영역(투표 현황), 추천 후보 목록, 맨 아래 버튼(투표하기 / 투표 바꾸기 / 호스트의 투표 마감하기).
 // 참가자 화면은 피그마에 없어, 호스트 화면에서 마감만 뺀 모양이다(docs/open-questions.md 2장).
 // 피그마 기준 위치: 제목 아래 20에 멤버, 32에 후보 머리, 16에 목록(카드 사이 16). 버튼은 홈 인디케이터 위 3.
 const MEMBERS_TOP = 20;
@@ -42,7 +42,7 @@ export function RecommendedContent({
 }: RecommendedContentProps) {
   const { bottom } = useSafeAreaInsets();
   const [membersOpen, setMembersOpen] = useState(false);
-  // 투표하기 전에 고른 후보. 투표한 뒤에는 바꿀 수 없다(docs/open-questions.md 2장).
+  // 투표하거나 투표를 바꾸려고 고른 후보. 마감 전까지는 투표한 뒤에도 고를 수 있다(T13).
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const myVote = myVoteOf(candidates, myId);
@@ -67,8 +67,8 @@ export function RecommendedContent({
             <CandidateCard
               key={candidate.id}
               {...candidateCardText(candidate, candidates, members)}
-              checked={(myVote ?? selectedId) === candidate.id}
-              onPress={myVote === null ? () => setSelectedId(candidate.id) : undefined}
+              checked={(selectedId ?? myVote) === candidate.id}
+              onPress={() => setSelectedId(candidate.id)}
             />
           ))}
         </View>
