@@ -8,6 +8,7 @@ import { seedMockAvailability } from './availability';
 import { seedMockCandidates } from './candidates';
 import { MOCK_ME } from './me';
 import { MOCK_PLACES } from './places';
+import { createStressPlans } from './stressPlans';
 
 // 개발 중 빈 홈을 보려면 true로 바꾼다. 약속 목록이 빈 배열로 온다(새로 만든 약속은 보인다).
 export const MOCK_EMPTY_PLANS = false;
@@ -254,5 +255,7 @@ function createMockPlans(now: Date): PlanDetail[] {
       hostId: PEOPLE[SEOYEON].id,
       members: [person(SEOYEON, true), person(JIHOON, true)],
     },
+    // 배치 확인용 극단 값 약속(긴 이름, 긴 장소, 12명)
+    ...createStressPlans(now, PEOPLE.slice(1)),
   ];
 }

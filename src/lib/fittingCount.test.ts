@@ -26,4 +26,13 @@ describe('fittingCount', () => {
   it('소수점 너비의 오차(235.999…)로 하나가 빠지지 않는다', () => {
     expect(fittingCount({ width: 235.9996, ...FACES })).toBe(4);
   });
+
+  // 허브의 겹친 얼굴 줄: 지름 48을 20씩 겹친다(한 명이 늘 때마다 28). 8명 = 48 + 28 × 7 = 244
+  it('겹쳐 놓는 줄(간격이 음수)도 센다', () => {
+    const overlapped = { size: 48, gap: -20, max: 10 };
+    expect(fittingCount({ width: 338, ...overlapped })).toBe(10);
+    expect(fittingCount({ width: 256, ...overlapped })).toBe(8);
+    expect(fittingCount({ width: 244, ...overlapped })).toBe(8);
+    expect(fittingCount({ width: 243, ...overlapped })).toBe(7);
+  });
 });

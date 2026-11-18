@@ -1,7 +1,5 @@
 import { Pressable, Text, View } from 'react-native';
 
-import { unbreakableText } from '@/lib/unbreakableText';
-
 import { Checkbox } from './Checkbox';
 
 // 피그마 Card/Candidate (2026-11-18 기준). 디자인이 완성 전이라 수치가 바뀔 수 있다.
@@ -11,10 +9,12 @@ import { Checkbox } from './Checkbox';
 const CARD = 'flex-row items-center gap-[8px] rounded-[13px] bg-white py-[16px] pl-[20px] pr-[16px]';
 const BADGE = 'items-center justify-center rounded-[7px] px-[8px] py-[4px]';
 const BADGE_MIN_WIDTH = 48;
-const META_HEIGHT = 30;
-// 피그마는 한 줄이지만 장소 이름이 길면 잘려 장소를 알 수 없어 두 줄까지 보인다.
-// 줄이 바뀔 때는 날짜·시각과 장소 사이에서 바뀐다(장소 이름은 통째로 다음 줄로).
-const TITLE_LINES = 2;
+// 피그마는 제목도 아랫줄도 한 줄이다. 자리가 모자라면 묶음 사이에서 줄이 바뀐다:
+// 제목은 날짜·시각과 장소 사이에서(장소 이름은 통째로 다음 줄로 가고, 그 줄에도 다 안 들어가면 "…"로 준다),
+// 아랫줄은 참석과 이동시간 사이에서. 날짜·시각, 참석, 이동시간은 줄지 않는다.
+const WRAP_ROW = 'flex-row flex-wrap items-center';
+const TITLE_GAP = 4;
+const META = { minHeight: 30, gap: 5 };
 
 type CandidateCardProps = {
   // "추천 1" 또는 "태혁 제안"
@@ -60,17 +60,18 @@ export function CandidateCard({
               {badge}
             </Text>
           </View>
-          <Text numberOfLines={TITLE_LINES} className="shrink font-pretendard text-body2 text-black">
-            {dateTime} {unbreakableText(place)}
-          </Text>
+          <View className={`flex-1 ${WRAP_ROW}`} style={{ columnGap: TITLE_GAP }}>
+            <Text className="font-pretendard text-body2 text-black">{dateTime}</Text>
+            <Text numberOfLines={1} className="shrink font-pretendard text-body2 text-black">
+              {place}
+            </Text>
+          </View>
         </View>
-        <View className="flex-row items-center gap-[5px]" style={{ height: META_HEIGHT }}>
-          <Text className={`font-pretendard text-caption-14 ${everyone ? 'text-blue-50' : 'text-gray-60'}`}>
+        <View className={WRAP_ROW} style={{ minHeight: META.minHeight, columnGap: META.gap }}>
+          <Text className={`shrink font-pretendard text-caption-14 ${everyone ? 'text-blue-50' : 'text-gray-60'}`}>
             {attendance}
           </Text>
-          <Text numberOfLines={1} className="shrink font-pretendard text-caption-14 text-black">
-            {detail}
-          </Text>
+          <Text className="font-pretendard text-caption-14 text-black">{detail}</Text>
         </View>
       </View>
       {/* 카드 전체가 누르는 곳이라 체크는 읽기 도구에서 숨긴다. 체크를 눌러도 카드를 누른 것과 같다. */}

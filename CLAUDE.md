@@ -73,8 +73,8 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | Navigation/Tab Bar, Navigation/Tab Item | `src/components/ui/TabBar.tsx` | 2026-11-18 | `TabBar`(children) + `TabItem`(icon, selected). 선택 전환은 180ms 페이드. 라우터 연결 없음 |
 | Avatar | `src/components/ui/Avatar.tsx` | 2026-11-18 | 프로필 동그라미 하나(`Avatar`: name, photo, size, 테두리). 사진이 없으면 이름 뒤 두 글자(`src/lib/avatarText.ts`). 카메라 버튼, Avatar/Member, Avatar/Group, Avatar/Map Pin은 쓰는 화면이 없어 지움(쓰일 때 `Avatar`를 쓰는 별도 컴포넌트로). Character 세트는 만들지 않음 |
 | Tooltip/Recent, Badge/Progress | `src/components/ui/Badge.tsx` | 2026-11-18 | `Tooltip`(label), `ProgressBadge`(count, label) |
-| Card/Plan | `src/components/home/PlanCard.tsx` | 2026-11-18 | `plan`, `now`, `onPress`. 라벨은 `src/lib/planLabel.ts`. 확정 전이면 시각·장소 "미정". 얼굴은 앞의 2명 |
-| Card/Today | `src/components/home/TodayCard.tsx` | 2026-11-18 | 확정된 오늘 약속(`ConfirmedPlan`)만 받는다. 얼굴 4명 + "외 N명". 좁은 화면에서는 들어가는 만큼만 그리고 나머지는 "외 N명"에(`src/lib/fittingCount.ts`). 얼굴 링(진척도)은 그리지 않음 |
+| Card/Plan | `src/components/home/PlanCard.tsx` | 2026-11-18 | `plan`, `now`, `onPress`. 라벨은 `src/lib/planLabel.ts`. 확정 전이면 시각·장소 "미정". 얼굴은 앞의 2명. 줄 두 개(머리, 본문)가 흐르는 배치다. 좁으면 구분선 양옆의 틈이 먼저 줄고, 제목과 장소 이름이 "…"로 준다(라벨, 시각, 날짜, 얼굴은 그대로) |
+| Card/Today | `src/components/home/TodayCard.tsx` | 2026-11-18 | 확정된 오늘 약속(`ConfirmedPlan`)만 받는다. 얼굴 4명 + "외 N명". 좁은 화면에서는 들어가는 만큼만 그리고 나머지는 "외 N명"에(`src/lib/fittingCount.ts`). 얼굴 링(진척도)은 그리지 않음. 줄 네 개(머리, 시각·장소, 점선, 얼굴)가 흐르는 배치이고 고정 좌표는 티켓의 파인 곳뿐이다. 좁으면 시각과 장소 사이의 틈이 먼저 줄고, 제목과 장소 이름이 "…"로 준다 |
 | Title/Page | `src/components/ui/PageTitle.tsx` | 2026-11-18 | 제목 + 부제 |
 | List/Summary Item | `src/components/ui/SummaryItem.tsx` | 2026-11-18 | 위 구분선 + "이름 ... 값" |
 | Input/Field, Input/Field Group | `src/components/ui/InputField.tsx` | 2026-11-18 | `InputFieldGroup`(children) + `InputField`(selected). 누르는 동작 없음 |
@@ -88,7 +88,7 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | List/Action Card | `src/components/ui/ActionCard.tsx` | 2026-11-18 | label, onPress. 누르는 동안 살짝 흐려짐(피그마에 없음) |
 | Section/Header | `src/components/ui/SectionHeader.tsx` | 2026-11-18 | 제목 + 오른쪽 알약 버튼(더하기 + 글자). 버튼은 `action`이 없으면 없다(피그마 showAction, 추천 후보 머리) |
 | Card/Place List | `src/components/ui/PlaceListCard.tsx` | 2026-11-18 | 줄마다 핀, 이름, 오른쪽 회색 글자(예: "태혁 제안"). 줄 사이 구분선 |
-| Hub/Members (Collapsed) | `src/components/plan-hub/HubMembers.tsx` | 2026-11-18 | 겹친 얼굴(최대 10) + 현황. 체크는 `checked`(모집 중 입력, 추천 나옴 투표), 글자는 `doneText`. 누르면 멤버 모달. 현황 줄은 `plan-hub/MemberProgress.tsx` |
+| Hub/Members (Collapsed) | `src/components/plan-hub/HubMembers.tsx` | 2026-11-18 | 겹친 얼굴(최대 10, 좁은 화면에서는 들어가는 만큼만. `src/lib/fittingCount.ts`) + 현황. 체크는 `checked`(모집 중 입력, 추천 나옴 투표), 글자는 `doneText`. 누르면 멤버 모달. 현황 줄은 `plan-hub/MemberProgress.tsx` |
 | Hub/Members (Expanded, 모달) | `src/components/plan-hub/MembersModal.tsx` | 2026-11-18 | React Native `Modal`. 최대 높이 화면의 70%, 넘치면 안에서 스크롤. 상태 글자는 `texts`(입력 완료/입력 중, 투표 완료/투표 전) |
 | Date Cell, Date Cell/Bar | `src/components/ui/MonthDateCell.tsx` | 2026-11-18 | 큰 달력 칸. 고른 모양(single/start/middle/end)은 테두리, 오늘은 날짜 테두리 원, 막대는 Available1~3 최대 3개 + "+". Event(내 일정) 막대는 없음. 낭독기 이름은 `dateKey`로 `src/lib/dateText.ts`의 `calendarDayLabel`("11월 24일 화요일, 오늘, 가능 시간 2개") |
 | Date Cell2, Date Cell/Bar Compact | `src/components/ui/CompactDateCell.tsx` | 2026-11-18 | 작은 달력 칸. 원 + 띠(가운데 날은 띠만). props는 `MonthDateCell`과 같음(낭독기 이름도 같다) |
@@ -106,7 +106,7 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | Avatar (카메라 버튼이 붙은 큰 프로필) | `src/components/ui/ProfileAvatar.tsx` | 2026-11-18 | `Avatar`(186) + 안쪽 그림자 + Button/Camera. Empty면 "이름". name, photo, onPressCamera |
 | Card/Invite | `src/components/join/InviteCard.tsx` | 2026-11-18 | `Invitation`을 받는다. 얼굴 3명(호스트 먼저) + 줄 4개. Card/Summary(`PlanSummaryCard`)와 다른 카드 |
 | (참여·온보딩 화면의 프로필 입력) | `src/components/profile/ProfileForm.tsx` | 2026-11-18 | `ProfileAvatar` + 이름 `TextField`. 참여 화면과 온보딩 프로필 화면이 같이 쓴다. 값은 props로 |
-| Card/Candidate | `src/components/ui/CandidateCard.tsx` | 2026-11-18 | badge, best(Type=Best), dateTime, place(제목. 줄은 둘 사이에서 바뀐다, `src/lib/unbreakableText.ts`), attendance, everyone(Attendance=All), detail, checked, onPress(없으면 못 누름). 글자는 `src/lib/candidateText.ts`. 제목 두 줄까지, 배지 최소 너비 48 |
+| Card/Candidate | `src/components/ui/CandidateCard.tsx` | 2026-11-18 | badge, best(Type=Best), dateTime, place(제목. 자리가 모자라면 줄은 둘 사이에서 바뀌고, 장소 이름은 그 줄에서 "…"로 준다), attendance, everyone(Attendance=All), detail, checked, onPress(없으면 못 누름). 글자는 `src/lib/candidateText.ts`. 제목 두 줄까지, 배지 최소 너비 48. 아랫줄(참석, 이동시간)도 자리가 모자라면 둘 사이에서 줄이 바뀐다 |
 | (허브 추천 나옴 내용) | `src/components/plan-hub/RecommendedContent.tsx` | 2026-11-18 | 05 Hub / Host - Recommended - Empty·Voting·Voted. 버튼 규칙은 `src/lib/voteStatus.ts`, 확정 규칙(T2)은 `src/lib/voteResult.ts` |
 | 09 Confirm / Done (Illustration/Done 포함) | `src/components/plan-hub/ConfirmedNotice.tsx` | 2026-11-18 | 허브 위에 덮는 화면. 2.5초 뒤 또는 누르면 닫힘. 보일지는 `src/lib/confirmedNotice.ts` |
 | (확정 허브, 임시 T4) | `src/components/plan-hub/ConfirmedContent.tsx` | 2026-11-18 | 디자인 없음. List/Summary Item + List/Member Row로 일시, 시간, 장소, 참가자 |

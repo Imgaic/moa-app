@@ -7,6 +7,7 @@ import { pickConfirmedCandidate } from '@/lib/voteResult';
 
 import { MOCK_PLACES } from './places';
 import { mockProposals } from './proposals';
+import { STRESS_VOTE_ID } from './stressPlans';
 
 // 추천 후보 세 개(docs/user-flow.md 6.5: 추천은 최대 3개). day는 날짜 범위 첫날부터 며칠 뒤인지,
 // absent는 빠지는 사람 수(호스트가 아닌 사람을 뒤에서부터 뺀다).
@@ -26,7 +27,11 @@ const SEEDED_VOTES: Record<string, Record<string, number>> = {
   'plan-voted': { m1: 0, m2: 0, m3: 1, m4: 3 },
   // 내가 참가자인 약속: 호스트(m5)와 한 사람이 투표했고 나는 아직
   'plan-guest-vote': { m5: 1, m7: 0 },
+  [STRESS_VOTE_ID]: { s1: 0, s2: 0, s3: 0, m2: 1, m3: 1, m4: 2, m5: 3, m6: 4 },
 };
+
+// 배치 확인용: 이 약속은 추천 후보마다 빠지는 사람 수를 따로 정한다(못 오는 사람이 3명인 후보).
+const SEEDED_ABSENT: Record<string, number[]> = { [STRESS_VOTE_ID]: [0, 1, 3] };
 
 const store = new Map<string, Candidate[]>();
 
@@ -43,7 +48,9 @@ export function addMockCandidates(plan: PlanDetail) {
     return new Date(year, month - 1, date + day, hour, minute).toISOString();
   };
   const recommended = RECOMMENDED.map((spec, index): Candidate => {
-    const absentIds = spec.absent === 0 ? [] : guests.slice(-spec.absent);
+    const absent = SEEDED_ABSENT[plan.id]?.[index] ?? spec.absent;
+    // 이름이 긴 사람이 "제외"에 들어가도록 앞에서부터 뺀다(배치 확인용 약속만). 그 밖에는 뒤에서부터.
+    const absentIds = absent === 0 ? [] : plan.id in SEEDED_ABSENT ? guests.slice(0, absent) : guests.slice(-absent);
     return {
       id: `${plan.id}-recommended-${index + 1}`,
       startsAt: startAt(spec.day, spec.hour, spec.minute),

@@ -29,8 +29,10 @@ export function Avatar({ name, photo, size, borderWidth, className = '' }: Avata
       {photo ? (
         <Image source={photo} contentFit="cover" style={{ width: '100%', height: '100%' }} />
       ) : (
+        // 글자는 원에 맞춘 그림이라, 기기의 글자 크기 설정을 따라 커지면 원 밖으로 나간다.
         <Text
           numberOfLines={1}
+          allowFontScaling={false}
           className="font-pretendard text-gray-30"
           style={{ fontSize, lineHeight: Math.ceil(fontSize * LINE_HEIGHT_RATIO) }}>
           {avatarText(name)}

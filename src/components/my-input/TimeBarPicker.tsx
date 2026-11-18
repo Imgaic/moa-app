@@ -9,13 +9,14 @@ import type { TimeRangePickerProps } from './TimeWheelPicker';
 // props는 타임 휠 안(TimeWheelPicker)과 같다. 휠 안의 시작/종료 칸과 달리 상자 없이 글자만 있고 누르는 동작이 없다.
 // 피그마 기준(2026-11-18): 시작·종료 사이 24, 라벨과 시각 사이 7, 글자 줄과 막대 사이 16.
 const SECTION_GAP = 'gap-[16px]';
-const EDGES_GAP = 'gap-[24px]';
+const EDGES_GAP = 'gap-x-[24px]';
 const LABEL_GAP = 'gap-[7px]';
 
 export function TimeBarPicker({ startMinutes, endMinutes, onChange }: TimeRangePickerProps) {
   return (
     <View className={SECTION_GAP}>
-      <View className={`flex-row justify-center ${EDGES_GAP}`}>
+      {/* 좁은 화면에서 한 줄에 안 들어가면 종료가 다음 줄로 내려간다. */}
+      <View className={`flex-row flex-wrap justify-center ${EDGES_GAP}`}>
         <EdgeTime label="시작" minutes={startMinutes} />
         <EdgeTime label="종료" minutes={endMinutes} />
       </View>

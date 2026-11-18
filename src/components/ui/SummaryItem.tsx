@@ -14,7 +14,8 @@ export function SummaryItem({ label, value }: SummaryItemProps) {
     <View className={GAP}>
       <View className="h-px bg-gray-20" />
       <View className="flex-row items-center justify-between gap-[12px]">
-        <Text className="font-pretendard text-body2 text-gray-40">{label}</Text>
+        {/* 값이 길면 값이 "…"로 줄고, 이름은 그대로 남는다. */}
+        <Text className="shrink-0 font-pretendard text-body2 text-gray-40">{label}</Text>
         <Text numberOfLines={1} className="shrink font-pretendard text-body2 text-black">
           {value}
         </Text>
