@@ -50,6 +50,11 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 |---|---|---|---|
 | Button/Primary | `src/components/ui/Button.tsx` | 2026-11-17 | Default / Pressed / Disabled, 라벨은 props |
 | Button/Social | `src/components/ui/SocialButton.tsx` | 2026-11-17 | Kakao / Google / Naver / Apple |
-| Input/Toggle | `src/components/ui/Toggle.tsx` | 2026-11-17 | Off / On |
+| Input/Toggle | `src/components/ui/Toggle.tsx` | 2026-11-17 | Off / On. 전환은 200ms(손잡이 이동 + 바탕 페이드) |
 | Input/Checkbox | `src/components/ui/Checkbox.tsx` | 2026-11-18 | 피그마 State의 Off = checked false, On = tone blue, On-black = tone black. Empty는 만들지 않기로 함 |
-| Input/Text | `src/components/ui/TextField.tsx` | 2026-11-18 | Empty / Filled(글자 크기는 값 유무로), 라벨, 도움말, 글자 수, 확인 버튼. 파란 밑줄은 포커스 표시(피그마에 포커스 상태 없음) |
+| Input/Text | `src/components/ui/TextField.tsx` | 2026-11-18 | Empty / Filled(글자 크기는 값 유무로), 라벨, 도움말, 글자 수, 확인 버튼. 파란 밑줄은 포커스 표시(피그마에 포커스 상태 없음), 200ms 페이드 |
+| Icon (icon/*, Illustration/Done) | `src/components/ui/Icon.tsx` | 2026-11-18 | `Icon` name 하나로 전부. 색은 className 글자색 토큰. 탭 아이콘은 home/calendar/user와 `-fill`. `DoneIllustration`은 140 고정 |
+| Navigation/Top Bar | `src/components/ui/TopBar.tsx` | 2026-11-18 | Type 6개(status/step/back/share/largeTitle/stepTitle). 상태 표시줄은 safe area로 대신 |
+| Navigation/Tab Bar, Navigation/Tab Item | `src/components/ui/TabBar.tsx` | 2026-11-18 | `TabBar`(children) + `TabItem`(icon, selected). 선택 전환은 180ms 페이드. 라우터 연결 없음 |
+| Avatar, Avatar/Member, Avatar/Group, Avatar/Map Pin | `src/components/ui/Avatar.tsx` | 2026-11-18 | `ProfileAvatar` / `MemberAvatar` / `GroupAvatar` / `MapPinAvatar`. 사진이 없으면 이름 뒤 두 글자(`src/lib/avatarText.ts`). Character 세트는 만들지 않음 |
+| Tooltip/Recent, Badge/Progress | `src/components/ui/Badge.tsx` | 2026-11-18 | `Tooltip`(label), `ProgressBadge`(count, label) |

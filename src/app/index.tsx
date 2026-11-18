@@ -1,13 +1,41 @@
 // 토큰과 UI 컴포넌트 견본을 보는 임시 화면이다. 다음 세션에서 실제 화면을 만들 때 지운다.
 import { useState, type ReactNode } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { GroupAvatar, MapPinAvatar, MemberAvatar, ProfileAvatar } from '@/components/ui/Avatar';
+import { ProgressBadge, Tooltip } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Checkbox } from '@/components/ui/Checkbox';
+import { DoneIllustration, Icon, type IconName } from '@/components/ui/Icon';
 import { SocialButton } from '@/components/ui/SocialButton';
+import { TabBar, TabItem, type TabIcon } from '@/components/ui/TabBar';
 import { TextField } from '@/components/ui/TextField';
 import { Toggle } from '@/components/ui/Toggle';
+import { TopBar } from '@/components/ui/TopBar';
+
+const samplePhoto = require('@/assets/images/samples/avatar-photo.png');
+
+const icons: IconName[] = [
+  'bus',
+  'car',
+  'people',
+  'pin',
+  'camera',
+  'back',
+  'chevron-right',
+  'close',
+  'plus',
+  'minus',
+  'share',
+  'check',
+];
+const tabIcons: IconName[] = ['home', 'home-fill', 'calendar', 'calendar-fill', 'user', 'user-fill'];
+const tabs: { icon: TabIcon; label: string }[] = [
+  { icon: 'home', label: '홈' },
+  { icon: 'calendar', label: '달력' },
+  { icon: 'user', label: '내 정보' },
+];
 
 const colors = [
   ['gray-10', 'bg-gray-10', '#F1F1F1'],
@@ -53,6 +81,8 @@ export default function TokenSamples() {
   const [name, setName] = useState('나해진');
   const [groupName, setGroupName] = useState('');
   const [labeled, setLabeled] = useState('');
+  const [tab, setTab] = useState<TabIcon>('home');
+  const [memberDone, setMemberDone] = useState(true);
 
   return (
     <SafeAreaView className="flex-1 bg-gray-10">
@@ -137,6 +167,108 @@ export default function TokenSamples() {
             placeholder="모임 이름"
             helper="라벨이 있는 경우"
           />
+        </Section>
+
+        <Section title="Icon (24, gray-50) · 탭 아이콘 (24, Fill False/True)">
+          <View className="flex-row flex-wrap gap-[5px]">
+            {icons.map((name) => (
+              <Icon key={name} name={name} />
+            ))}
+          </View>
+          <View className="flex-row gap-[5px]">
+            {tabIcons.map((name) => (
+              <Icon key={name} name={name} />
+            ))}
+          </View>
+          <View className="flex-row gap-[5px]">
+            {icons.map((name) => (
+              <Icon key={name} name={name} className="text-blue-50" />
+            ))}
+          </View>
+          <DoneIllustration />
+        </Section>
+
+        <Section title="TopBar (Status, Step, Back, Share, Large Title, Step Title)">
+          <View className="-mx-6 gap-3 bg-white py-3">
+            <TopBar type="status" />
+            <TopBar type="step" />
+            <TopBar type="back" actionLabel="확인" />
+            <TopBar type="share" />
+            <TopBar type="largeTitle" title="약속" />
+            <TopBar type="stepTitle" title="예상 중간 지점" />
+          </View>
+        </Section>
+
+        <Section title={`TabBar · 누르면 선택이 바뀐다 (지금: ${tab})`}>
+          <View className="-mx-6">
+            <TabBar>
+              {tabs.map(({ icon, label }) => (
+                <TabItem
+                  key={icon}
+                  icon={icon}
+                  selected={tab === icon}
+                  onPress={() => setTab(icon)}
+                  accessibilityLabel={label}
+                />
+              ))}
+            </TabBar>
+          </View>
+        </Section>
+
+        <Section title="TabItem (Active, Inactive × Home, Calendar, User)">
+          <View className="flex-row gap-5 bg-white">
+            {tabs.map(({ icon, label }) => (
+              <View key={icon} className="flex-row">
+                <TabItem icon={icon} selected accessibilityLabel={label} />
+                <TabItem icon={icon} selected={false} accessibilityLabel={label} />
+              </View>
+            ))}
+          </View>
+        </Section>
+
+        <Section title="Avatar (Empty: 이름 뒤 두 글자, Filled: 사진)">
+          <View className="flex-row flex-wrap">
+            <ProfileAvatar name="나해진" />
+            <ProfileAvatar name="나해진" photo={samplePhoto} />
+          </View>
+        </Section>
+
+        <Section title="Avatar/Member · 첫 번째를 누르면 입력 완료 표시가 바뀐다">
+          <View className="flex-row flex-wrap items-start gap-5">
+            <Pressable onPress={() => setMemberDone((v) => !v)}>
+              <MemberAvatar name="해진" photo={samplePhoto} checked={memberDone} />
+            </Pressable>
+            <MemberAvatar name="나해진" status="입력 중" />
+            <MemberAvatar name="진" checked />
+            <MemberAvatar name="" />
+            <MemberAvatar name="나해진" showName={false} />
+          </View>
+        </Section>
+
+        <Section title="Avatar/Group (사진, 이름 글자)">
+          <View className="flex-row flex-wrap gap-3">
+            <GroupAvatar
+              members={[
+                { name: '김민수', photo: samplePhoto },
+                { name: '나해진', photo: samplePhoto },
+              ]}
+            />
+            <GroupAvatar members={[{ name: '김민수' }, { name: '나해진' }]} />
+          </View>
+        </Section>
+
+        <Section title="Avatar/Map Pin (사진 + 체크, 이름 글자)">
+          <View className="flex-row gap-5 bg-white p-3">
+            <MapPinAvatar name="해진" photo={samplePhoto} label="수원역" checked />
+            <MapPinAvatar name="나해진" label="강남역" />
+          </View>
+        </Section>
+
+        <Section title="Tooltip/Recent, Badge/Progress">
+          <View className="items-center gap-[17px] bg-white p-3">
+            <Tooltip label="최근 로그인" />
+            <ProgressBadge count="3/4명" label="입력 완료" />
+          </View>
         </Section>
       </ScrollView>
     </SafeAreaView>
