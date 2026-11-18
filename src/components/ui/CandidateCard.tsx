@@ -1,5 +1,7 @@
 import { Pressable, Text, View } from 'react-native';
 
+import { unbreakableText } from '@/lib/unbreakableText';
+
 import { Checkbox } from './Checkbox';
 
 // 피그마 Card/Candidate (2026-11-18 기준). 디자인이 완성 전이라 수치가 바뀔 수 있다.
@@ -11,14 +13,17 @@ const BADGE = 'items-center justify-center rounded-[7px] px-[8px] py-[4px]';
 const BADGE_MIN_WIDTH = 48;
 const META_HEIGHT = 30;
 // 피그마는 한 줄이지만 장소 이름이 길면 잘려 장소를 알 수 없어 두 줄까지 보인다.
+// 줄이 바뀔 때는 날짜·시각과 장소 사이에서 바뀐다(장소 이름은 통째로 다음 줄로).
 const TITLE_LINES = 2;
 
 type CandidateCardProps = {
   // "추천 1" 또는 "태혁 제안"
   badge: string;
   best: boolean;
-  // "4월 1일 (수) 오후 7:00 사당역"
-  title: string;
+  // "4월 1일 (수) 오후 7:00"
+  dateTime: string;
+  // "사당역"
+  place: string;
   // "4명 모두" 또는 "3명 가능 · 동하 제외"
   attendance: string;
   everyone: boolean;
@@ -32,7 +37,8 @@ type CandidateCardProps = {
 export function CandidateCard({
   badge,
   best,
-  title,
+  dateTime,
+  place,
   attendance,
   everyone,
   detail,
@@ -42,7 +48,7 @@ export function CandidateCard({
   return (
     <Pressable
       accessibilityRole="radio"
-      accessibilityLabel={`${badge}, ${title}, ${attendance} ${detail}`}
+      accessibilityLabel={`${badge}, ${dateTime} ${place}, ${attendance} ${detail}`}
       accessibilityState={{ checked, disabled: !onPress }}
       disabled={!onPress}
       onPress={onPress}
@@ -55,7 +61,7 @@ export function CandidateCard({
             </Text>
           </View>
           <Text numberOfLines={TITLE_LINES} className="shrink font-pretendard text-body2 text-black">
-            {title}
+            {dateTime} {unbreakableText(place)}
           </Text>
         </View>
         <View className="flex-row items-center gap-[5px]" style={{ height: META_HEIGHT }}>

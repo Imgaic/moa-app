@@ -63,7 +63,8 @@ const CANDIDATE_SAMPLES = [
   {
     badge: '추천 1',
     best: true,
-    title: '4월 1일 (수) 오후 7:00 사당역',
+    dateTime: '4월 1일 (수) 오후 7:00',
+    place: '사당역',
     attendance: '4명 모두',
     everyone: true,
     detail: '· 평균 38분 · 최대 42분',
@@ -71,7 +72,8 @@ const CANDIDATE_SAMPLES = [
   {
     badge: '추천 3',
     best: false,
-    title: '4월 24일 (금) 오후 7:30 사당역',
+    dateTime: '4월 24일 (금) 오후 7:30',
+    place: '사당역',
     attendance: '3명 가능 · 동하 제외',
     everyone: false,
     detail: '· 평균 40분 · 최대 55분',
@@ -79,7 +81,8 @@ const CANDIDATE_SAMPLES = [
   {
     badge: '태혁 제안',
     best: false,
-    title: '4월 3일 (금) 오후 6:00 홍대입구역 2호선',
+    dateTime: '4월 3일 (금) 오후 6:00',
+    place: '홍대입구역 2호선',
     attendance: '4명 모두',
     everyone: true,
     detail: '· 평균 45분 · 최대 58분',

@@ -1,8 +1,10 @@
 import '@/global.css';
 
 import { useFonts } from 'expo-font';
+import { NavigationBar } from 'expo-navigation-bar';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -56,6 +58,10 @@ export default function RootLayout() {
   // 시간 막대(react-native-gesture-handler)의 손가락 동작은 이 뿌리 아래에서만 받는다.
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      {/* 화면이 아직 밝은 색뿐이라, 기기가 다크 모드여도 상태 표시줄 글자와 안드로이드 하단 바 버튼을 어둡게 고정한다.
+          다크 모드 화면을 만들 때 둘 다 "auto"로 바꾼다(docs/open-questions.md 2장). */}
+      <StatusBar style="dark" />
+      <NavigationBar style="dark" />
       {/* Expo Router 보호된 라우트(SDK 58). guard가 거짓인 화면은 열 수 없고, 열려 있던 화면은 기록에서 지워진다.
           회원이 아니면 홈과 허브가 막혀 온보딩으로 간다(redirectTo. 없으면 견본 화면이 열렸다).
           온보딩을 마치면 온보딩이 막혀 홈(anchor)으로 간다. 참여 화면(join)과 견본(samples)은 여기에 없어 늘 열린다. */}
