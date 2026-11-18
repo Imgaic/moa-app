@@ -106,3 +106,5 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | (확정 허브, 임시 T4) | `src/components/plan-hub/ConfirmedContent.tsx` | 2026-11-18 | 디자인 없음. List/Summary Item + List/Member Row로 일시, 시간, 장소, 참가자 |
 | List/Terms Item | `src/components/ui/TermsItem.tsx` | 2026-11-18 | title, description, checked, onPress, showArrow. 줄 전체를 누르면 체크. 화살표는 누를 수 없는 표시(약관 내용 화면 없음). 규칙은 `src/lib/termsAgreement.ts`, 항목은 `src/constants/terms.ts` |
 | (제목 + 본문 + 아래 버튼 화면 틀) | `src/components/ui/StepLayout.tsx` | 2026-11-18 | 피그마 컴포넌트 아님. 참여, 약관, 프로필 화면이 같이 쓴다. title, subtitle, bodyTop, button, children |
+| (불러오는 중 스피너, 못 불러옴 문구) | `src/components/ui/LoadStatus.tsx` | 2026-11-18 | 피그마 컴포넌트 아님(임시 모양). state(loading/error/missing), errorText, missingText. 홈, 허브, 내 입력, 참여 화면이 같이 쓴다. 불러오기 자체는 화면마다 따로 |
+| (내 입력의 단계 내용) | `src/components/my-input/DatePickStep.tsx`(큰 달력), `src/components/my-input/TimeCardStep.tsx`(작은 달력 + 시간 카드) | 2026-11-18 | 상단 바, 스크롤, 저장 버튼은 화면이 두른다. 값이 바뀌는 규칙은 `src/lib/myInputEditing.ts` |

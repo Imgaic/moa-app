@@ -4,13 +4,14 @@
 // 프로필을 마칠 때 익명으로 참여한다(2026-11-18 사용자 결정). 이미 멤버면 묻지 않고 허브로 간다.
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Text } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native';
 
 import { getInvitation, joinPlan, type Invitation } from '@/api/invitations';
 import { getSignedInMe, type GuestProfile } from '@/api/me';
 import { InviteCard } from '@/components/join/InviteCard';
 import { ProfileForm } from '@/components/profile/ProfileForm';
 import { Button } from '@/components/ui/Button';
+import { LoadStatus } from '@/components/ui/LoadStatus';
 import { StepLayout } from '@/components/ui/StepLayout';
 import { TopBar } from '@/components/ui/TopBar';
 import { notify } from '@/lib/dialogs';
@@ -54,12 +55,8 @@ export default function Join() {
     <KeyboardAvoidingView behavior="padding" className="flex-1 bg-gray-10">
       {/* 프로필 단계에서만 초대 카드로 돌아가는 뒤로 버튼을 둔다. 적은 이름과 사진은 그대로 남는다. */}
       {step === 'profile' ? <TopBar type="back" onBack={() => setStep('invite')} /> : <TopBar type="status" />}
-      {loaded.state === 'loading' ? (
-        <ActivityIndicator className="mt-[40px]" />
-      ) : loaded.state !== 'ready' ? (
-        <Text className="mt-[40px] text-center font-pretendard text-body2 text-gray-40">
-          {loaded.state === 'missing' ? '초대를 찾을 수 없어요' : '초대를 불러오지 못했어요'}
-        </Text>
+      {loaded.state !== 'ready' ? (
+        <LoadStatus state={loaded.state} errorText="초대를 불러오지 못했어요" missingText="초대를 찾을 수 없어요" />
       ) : (
         <JoinSteps
           invitation={loaded.invitation}
