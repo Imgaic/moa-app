@@ -1,30 +1,57 @@
 // 백엔드가 나오기 전까지 쓰는 가짜 약속. src/api/plans.ts만 이 파일을 쓴다(화면은 직접 import하지 않는다).
-// 날짜는 부르는 시각(now) 기준으로 계산해서, 언제 열어도 "오늘의 약속"이 보인다.
-import type { Plan, PlanMember } from '@/api/plans';
+// 날짜는 처음 부른 시각(now) 기준으로 한 번 계산해서, 앱을 켠 날 열면 "오늘의 약속"이 보인다.
+// 약속 만들기, 마감처럼 바뀐 내용은 앱이 켜져 있는 동안만 남는다.
+import type { Member, PlanDetail } from '@/api/plans';
+import { toDateKey } from '@/lib/monthGrid';
 
 import { MOCK_ME } from './me';
+import { MOCK_PLACES } from './places';
 
-// 개발 중 빈 홈을 보려면 true로 바꾼다. 약속 목록이 빈 배열로 온다.
+// 개발 중 빈 홈을 보려면 true로 바꾼다. 약속 목록이 빈 배열로 온다(새로 만든 약속은 보인다).
 export const MOCK_EMPTY_PLANS = false;
-
-const member = (id: string, name: string): PlanMember => ({ id, name, avatarUrl: null });
 
 // 가짜 초대 링크의 앞부분. 실제 형식은 미정이다(docs/open-questions.md).
 const MOCK_INVITE_BASE = 'https://example.com/moa/join/';
 
-const MEMBERS = [
-  MOCK_ME,
-  member('m2', '김민수'),
-  member('m3', '이서연'),
-  member('m4', '박지훈'),
-  member('m5', '최예희'),
-  member('m6', '정우성'),
-  member('m7', '한소희'),
+const MEMBER_NAMES = [
+  '김태혁',
+  '성예희',
+  '대동하',
+  '김민수',
+  '이서연',
+  '박지훈',
+  '정우성',
+  '한소희',
+  '오지은',
+  '윤도현',
+  '장하늘',
+  '서지우',
+  '임채원',
 ];
+
+// m1은 나(MOCK_ME), m2부터 MEMBER_NAMES 순서
+const PEOPLE = [MOCK_ME, ...MEMBER_NAMES.map((name, i) => ({ id: `m${i + 2}`, name, avatarUrl: null }))];
+const ME = 0;
+const TAEHYUK = 1;
+const YEHEE = 2;
+const DONGHA = 3;
+const MINSU = 4;
+const SEOYEON = 5;
+const JIHOON = 6;
+// 동아리 회식: 멤버 모달 안 스크롤을 보려고 모두 넣는다. 앞의 이만큼이 입력했다.
+const CROWD_SUBMITTED = 6;
+
+const person = (index: number, submitted: boolean): Member => ({ ...PEOPLE[index], submitted });
 
 // now로부터 days일 뒤 hour:minute
 function dayAt(now: Date, days: number, hour: number, minute: number): string {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate() + days, hour, minute).toISOString();
+}
+
+// now로부터 from일 뒤 ~ to일 뒤
+function daysFrom(now: Date, from: number, to: number): PlanDetail['dateRange'] {
+  const day = (days: number) => toDateKey(new Date(now.getFullYear(), now.getMonth(), now.getDate() + days));
+  return { start: day(from), end: day(to) };
 }
 
 // 오늘의 약속은 10분 뒤에 시작한다. 자정을 넘기면 오늘 23:59로 둔다.
@@ -34,55 +61,106 @@ function inTenMinutesToday(now: Date): string {
   return new Date(Math.min(tenMinutesLater.getTime(), lastMinuteToday.getTime())).toISOString();
 }
 
-// createPlan으로 만든 약속. 앱을 다시 켜면 사라진다.
-const createdPlans: Plan[] = [];
+const placeNamed = (id: string) => MOCK_PLACES.find((place) => place.id === id) ?? null;
 
-export function addMockPlan(plan: Plan) {
-  createdPlans.unshift(plan);
+let store: PlanDetail[] | null = null;
+
+// 홈 목록. 처음 부를 때 한 번 만든다.
+export function mockPlans(now: Date): PlanDetail[] {
+  store ??= MOCK_EMPTY_PLANS ? [] : createMockPlans(now);
+  return store;
+}
+
+export function findMockPlan(planId: string): PlanDetail | undefined {
+  return mockPlans(new Date()).find((plan) => plan.id === planId);
+}
+
+// createPlan으로 만든 약속은 목록 맨 앞에 둔다.
+export function addMockPlan(plan: PlanDetail) {
+  mockPlans(new Date()).unshift(plan);
 }
 
 export function mockInviteLink(planId: string): string {
   return `${MOCK_INVITE_BASE}${planId}`;
 }
 
-export function createMockPlans(now: Date): Plan[] {
-  if (MOCK_EMPTY_PLANS) return [...createdPlans];
+function createMockPlans(now: Date): PlanDetail[] {
+  const decided = { hostId: MOCK_ME.id, dateRange: daysFrom(now, 0, 14), durationMinutes: 120 };
+  const recommendPlace = { placeMode: 'recommend', fixedPlace: null } as const;
   return [
-    ...createdPlans,
     {
+      ...decided,
+      ...recommendPlace,
       id: 'plan-today',
       title: '캡스톤 회의',
       status: 'confirmed',
       confirmed: { startsAt: inTenMinutesToday(now), place: { name: '중앙대' } },
-      members: MEMBERS,
+      members: PEOPLE.slice(0, 7).map((_, i) => person(i, true)),
     },
     {
+      ...decided,
+      ...recommendPlace,
       id: 'plan-tomorrow',
       title: '저녁 약속',
       status: 'confirmed',
       confirmed: { startsAt: dayAt(now, 1, 18, 0), place: { name: '사당역' } },
-      members: [MEMBERS[0], MEMBERS[4]],
+      members: [person(ME, true), person(MINSU, true)],
     },
     {
+      // 내가 호스트인 모집 중 약속(피그마 05 Hub / Host - Collecting)
+      ...recommendPlace,
       id: 'plan-collecting',
+      title: '저녁 모임',
+      status: 'collecting',
+      confirmed: null,
+      hostId: MOCK_ME.id,
+      dateRange: daysFrom(now, 3, 30),
+      durationMinutes: 120,
+      members: [person(TAEHYUK, true), person(YEHEE, false), person(DONGHA, false), person(ME, false)],
+    },
+    {
+      // 내가 참가자인 모집 중 약속(피그마 05 Hub / Guest - Collecting - Proposals)
+      ...recommendPlace,
+      id: 'plan-guest',
       title: '팀 스터디',
       status: 'collecting',
       confirmed: null,
-      members: [MEMBERS[0], MEMBERS[1], MEMBERS[3]],
+      hostId: PEOPLE[MINSU].id,
+      dateRange: daysFrom(now, 1, 10),
+      durationMinutes: 90,
+      members: [person(MINSU, true), person(ME, true), person(JIHOON, true), person(SEOYEON, false)],
     },
     {
+      // 장소가 정해져 있고 멤버가 많은 모집 중 약속
+      id: 'plan-crowd',
+      title: '동아리 회식',
+      status: 'collecting',
+      confirmed: null,
+      hostId: MOCK_ME.id,
+      dateRange: daysFrom(now, 7, 7),
+      durationMinutes: 180,
+      placeMode: 'fixed',
+      fixedPlace: placeNamed('place-6'),
+      members: PEOPLE.map((_, i) => person(i, i < CROWD_SUBMITTED)),
+    },
+    {
+      ...decided,
+      ...recommendPlace,
       id: 'plan-recommended',
       title: '가족 모임',
       status: 'recommended',
       confirmed: null,
-      members: [MEMBERS[0], MEMBERS[6]],
+      members: [person(ME, true), person(PEOPLE.length - 1, true)],
     },
     {
+      ...decided,
+      ...recommendPlace,
       id: 'plan-later',
       title: '친구 모임',
       status: 'confirmed',
       confirmed: { startsAt: dayAt(now, 13, 12, 30), place: { name: '강남역' } },
-      members: [MEMBERS[2], MEMBERS[5]],
+      hostId: PEOPLE[SEOYEON].id,
+      members: [person(SEOYEON, true), person(JIHOON, true)],
     },
   ];
 }

@@ -65,6 +65,25 @@
 - 2026-11-18, feat/plan-create: 새 약속은 앱이 켜져 있는 동안만 가짜 저장소(`src/mocks/plans.ts`)에 남고, 홈 목록 맨 앞(확정 전 약속 중 맨 앞)에 보인다. 홈은 화면에 돌아올 때마다 목록을 다시 불러온다.
 - 2026-11-18, feat/plan-create: 피그마 Card/Option의 카드 사이 간격 16, Summary/Create의 줄마다 위 구분선을 그대로 따랐다. 글자 줄 높이(크기 × 1.2)가 피그마(100%)보다 커서 세로 위치가 1~2씩 다르다.
 - 2026-11-18, refactor/avatar-and-platform-fixes: `Avatar`는 프로필 동그라미 하나만 맡는다. 카메라 버튼이 붙은 프로필(피그마 Avatar), Avatar/Member(입력 완료 체크), Avatar/Group, Avatar/Map Pin은 쓰는 화면이 없어 지웠다. 쓰는 화면이 생기면 `Avatar`를 쓰는 별도 컴포넌트로 만든다. 지우기 전 코드는 커밋 `278eee7`의 `src/components/ui/Avatar.tsx`에 있다.
+- 2026-11-18, feat/hub-collecting: 허브 화면(`src/app/plans/[planId]/index.tsx`)은 약속, 제안, 나(`getMe`)를 불러와 머리(이름과 조건 줄)를 그리고 상태에 맞는 내용을 고른다. 모집 중만 `src/components/plan-hub/CollectingContent.tsx`로 만들었고, 추천 나옴·확정·지남은 "다음 작업에서 만든다" 한 줄이다. 불러오는 중은 돌아가는 표시, 실패는 "약속을 불러오지 못했어요", 없는 약속은 "약속을 찾을 수 없어요" 한 줄이다.
+- 2026-11-18, feat/hub-collecting: 허브는 화면에 들어올 때(장소 제안이나 내 입력에서 돌아올 때 포함)와 마감 뒤에만 다시 불러온다. 실시간 반영 방식이 미정이라 다른 사람의 변화는 다시 들어와야 보인다.
+- 2026-11-18, feat/hub-collecting: 내가 호스트인지는 `plan.hostId`와 `getMe()`의 id를 비교해 정한다. 서버가 "내가 누구인지"를 어떻게 아는지(게스트 인증)는 미정이라 가짜 `getMe`는 늘 나해진(m1)이다. 내가 참가자인 약속을 보려고 가짜 약속 `팀 스터디`(plan-guest)의 호스트를 김민수로 두었다.
+- 2026-11-18, feat/hub-collecting: 조건 한 줄은 피그마처럼 같은 달이면 끝 날짜의 달을 뺀다("4월 1일 ~ 30일"). 달이나 해가 다르면 끝에도 달을 쓴다. 약속 만들기의 요약("4월 1일 ~ 4월 30일")과 모양이 다르다. 장소가 정해져 있으면 "장소 추천받기" 자리에 장소 이름을 쓴다.
+- 2026-11-18, feat/hub-collecting: 제안한 사람 글자("태혁 제안")는 이름 뒤 두 글자다(피그마 예시 김태혁 → 태혁). 아바타 글자와 같은 규칙이라 `avatarText`를 다시 썼다. 제안 목록은 제안한 순서대로다.
+- 2026-11-18, feat/hub-collecting: 멤버 영역의 겹친 얼굴은 최대 10개다(피그마 영역 너비 338에 48짜리 얼굴을 20씩 겹쳐 넘치지 않는 개수). 나머지는 모달에서 본다. "+N" 같은 표시는 피그마에 없어 넣지 않았다. 얼굴은 앞사람이 뒷사람 위에 온다.
+- 2026-11-18, feat/hub-collecting: 멤버 모달은 React Native `Modal`(투명 바탕, 페이드)로 띄웠다. Expo Router 문서(SDK 58)는 내비게이션의 일부가 아닌 짧은 상호작용에는 `Modal` 컴포넌트를, 여러 단계 흐름에는 모달 라우트를 권한다. 라우트로 띄우면 웹에서 닫는 동작을 따로 만들고 멤버 목록을 주소로 넘겨야 해서 `Modal`이 더 단순하다. 바깥 누르기, 닫기 버튼, Android 뒤로 가기(`onRequestClose`), 웹 Esc로 닫힌다. 최대 높이는 화면 높이의 70%로, 넘치면 멤버 목록만 스크롤되고 머리(입력 현황과 닫기)는 고정이다. 모달 바깥은 피그마 값(gray-60 60%)이다.
+- 2026-11-18, feat/hub-collecting: 멤버 모달의 상태 글자는 피그마대로 입력했으면 "입력 완료", 아니면 "입력 중"이다.
+- 2026-11-18, feat/hub-collecting: "가능한 일정 입력하러 가기 / 수정하러 가기"는 내가 입력했는지(`members`의 `submitted`)로 바꾼다. 누르면 임시 화면 `/plans/[planId]/input`으로 간다.
+- 2026-11-18, feat/hub-collecting: 장소 제안은 별도 라우트 `/plans/[planId]/place-search`다(`docs/user-flow.md` 5장의 이름). 약속 만들기의 임시 장소 찾기(`PlaceSearch`)를 다시 써서 `src/components/place/`로 옮겼고, 검색어와 결과 상태는 두 화면이 같이 쓰도록 `src/hooks/usePlaceSearch.ts`로 꺼냈다. 제목 "장소 제안", 부제 "함께 갈 만한 장소를 검색하세요"는 임시 문구다. 고르면 바로 등록하고 허브로 돌아간다(확인 단계 없음). 등록 중에 다른 줄을 또 누르면 무시한다.
+- 2026-11-18, feat/hub-collecting: 장소 방식이 "정해져 있음"인 약속도 제안 구역을 같은 모양으로 둔다(`docs/user-flow.md` 7.2: 정해져 있어도 제안할 수 있다). 피그마에 이 경우의 화면이 없다. 공통 가능 시간을 바로 보여주는 것(6.4)은 내 입력이 없어 아직 만들지 않았다.
+- 2026-11-18, feat/hub-collecting: 제안이 없으면 피그마 `Host - Collecting`처럼 "제안된 장소" 머리만 있고 목록 카드는 없다.
+- 2026-11-18, feat/hub-collecting: "마감하고 추천받기"는 확인 창을 한 번 띄운다. 피그마에 확인 창이 없어 OS 기본 알림창(iOS·Android `Alert`, 웹 `window.confirm`)을 썼다. 문구는 임시다: 제목 "마감하고 추천받을까요?", 내용 "지금까지 입력한 일정으로 시간과 장소를 추천받아요.", 버튼 "취소" / "마감하기". 확인하면 `closeAndRecommend` 뒤 다시 불러와 추천 나옴의 임시 내용으로 바뀐다.
+- 2026-11-18, feat/hub-collecting: 참가자에게는 마감 버튼 자리에 누를 수 없는 회색 버튼 "호스트가 마감하면 추천이 나와요"를 둔다(피그마 `Guest - Collecting - Proposals`, `Button`의 Disabled).
+- 2026-11-18, feat/hub-collecting: 공유 아이콘은 약속 만들기처럼 링크 문자열만 OS 공유 시트로 보낸다(`src/lib/dialogs.ts`의 `shareLink`). 사람이 시트를 닫은 것(AbortError)은 무시하고, 공유하지 못하면(웹에서 `navigator.share`가 없는 브라우저 등) "공유하지 못했어요 / 아래 링크를 복사해 보내 주세요"와 링크를 알림창으로 보여준다. 클립보드 복사 같은 대체 기능은 만들지 않았다. 웹에서 React Native `Alert`는 아무것도 하지 않아(react-native-web) 웹은 `window.alert`, `window.confirm`을 쓴다. 이 플랫폼 처리는 순수 로직은 아니지만 화면 밖 한 곳에 모으려고 `src/lib/dialogs.ts`에 두었다.
+- 2026-11-18, feat/hub-collecting: 링크는 `getInviteLink(planId)`로 받는다. 형식은 미정이라 가짜는 `https://example.com/moa/join/<planId>`다.
+- 2026-11-18, feat/hub-collecting: 가짜 약속은 처음 부를 때 한 번 만들어 앱이 켜져 있는 동안 남는다(마감, 제안, 새 약속이 다시 불러와도 유지되게). 그래서 "오늘의 약속 10분 후"는 앱을 켠 시각 기준으로 고정된다. 허브용으로 `저녁 모임`(호스트, 1/4명, 제안 2개), `팀 스터디`(참가자, 3/4명, 제안 3개), `동아리 회식`(호스트, 14명, 장소 정해짐)을 두었다.
+- 2026-11-18, feat/hub-collecting: `Plan`(홈 카드)과 `PlanDetail`(허브) 타입을 나눴다. `PlanDetail`은 `hostId`, `dateRange`, `durationMinutes`, `placeMode`, `fixedPlace`, 멤버별 `submitted`를 더한다. `NewPlan`은 `PlanDetail`에서 고른 필드로 바꿨다(모양은 같다). 제안은 `{ id, memberId, place }`(`src/api/proposals.ts`)다.
+- 2026-11-18, feat/hub-collecting: Section/Header의 "장소 제안" 알약과 List/Action Card는 누르는 동안의 모양이 피그마에 없어 살짝 흐리게(70%) 했다.
 
 ## 3. 디자이너에게 물어볼 것
 
@@ -90,6 +109,16 @@
 - 약속 만들기: 장소 찾기(검색) 화면 디자인. 지금은 임시 모양이다
 - 약속 만들기: 공유 시트에 링크와 함께 보낼 메시지 문구, 공유 뒤에 갈 곳(지금은 약속 허브)
 - 약속 만들기: Card/Summary의 "수정"이 어느 단계로 가는지(지금은 이름)
+- 약속 허브: `05 Hub / Host - Collecting Expanded`(374:11561)의 모달 머리는 "1/4명"인데 뒤 화면은 "4/4명"이다. 예시가 섞인 것으로 보고 둘 다 같은 값을 쓴다
+- 약속 허브: 멤버가 많을 때 겹친 얼굴을 몇 명까지 보일지, "+N" 표시가 필요한지(지금은 최대 10)
+- 약속 허브: 멤버 모달의 최대 높이(지금은 화면의 70%)와 열고 닫는 애니메이션(지금은 페이드)
+- 약속 허브: 조건 한 줄의 날짜 범위("4월 1일 ~ 30일")와 약속 만들기 요약("4월 1일 ~ 4월 30일")의 모양을 맞출지
+- 약속 허브: 마감 확인 창의 디자인과 문구(지금은 OS 기본 알림창)
+- 약속 허브: 장소가 정해진 약속의 모집 중 화면(공통 가능 시간, 제안 구역을 보일지)
+- 약속 허브: 장소 제안 화면(검색) 디자인, 제안 전 확인 단계가 필요한지, 같은 장소를 두 번 제안할 수 있는지
+- 약속 허브: 제안 줄을 누르면 무엇을 하는지(지금은 누르는 동작 없음), 내 제안을 지울 수 있는지
+- 약속 허브: 웹에서 공유 창이 없을 때의 안내(지금은 링크를 보여주는 알림창). 링크 복사 버튼이 필요한지
+- 약속 허브: List/Action Card, Section/Header 버튼의 누른 상태
 
 ## 4. 백엔드에게 물어볼 것
 
@@ -100,3 +129,9 @@
 - 약속 만들기 API(`createPlan`): 보내는 값은 `title`, `durationMinutes`, `dateRange`(`"YYYY-MM-DD"` 두 개), `placeMode`, `fixedPlace`다(`src/api/plans.ts`의 `NewPlan`). 돌려받는 값은 만든 약속과 초대 링크 문자열이다. 링크 형식과 만료(Q5)는 게스트 인증과 함께 정해야 한다
 - 장소(`Place`)의 모양: 지금 프론트는 `id`, `name`, `address`만 쓴다. 좌표와 장소 검색 API(카카오 로컬이 후보)를 서버가 감쌀지 앱이 바로 부를지
 - 로그인한 나의 정보(`getMe`): 이름과 사진을 어디서 받는지
+- 약속 하나 API(`getPlan`): 허브는 `id`, `title`, `status`, `hostId`, `dateRange`, `durationMinutes`, `placeMode`, `fixedPlace`(`id`, `name`, `address`), `members`(id, name, avatarUrl, `submitted`)를 쓴다(`src/api/plans.ts`의 `PlanDetail`). 없는 약속이면 무엇을 돌려주는지(지금은 null), 내가 멤버가 아닌 약속을 열면 어떻게 되는지
+- "나"와 호스트 판별: 프론트는 `getMe().id === plan.hostId`로 호스트 화면을 고른다. 게스트(익명) 사용자도 같은 모양의 id를 받는지, 아니면 `getPlan`이 `isHost`나 `myMemberId`를 같이 주는지
+- 제안 API(`getProposals`, `proposePlace`): 제안은 `{ id, memberId, place }`, 제안한 순서로 준다고 가정했다. 같은 사람이 같은 장소를 두 번 제안하면 막는지, 정해진 장소 약속과 확정 뒤에 제안을 막는지(서버에서 확인하길 기대한다)
+- 마감 API(`closeAndRecommend`): 호스트가 아니면 거절하는지, 마감 뒤 추천 계산이 끝날 때까지 상태가 무엇인지(바로 `recommended`인지, 계산 중 상태가 따로 있는지)
+- 초대 링크(`getInviteLink`): 약속마다 고정인지, 부를 때마다 새로 만드는지. 참가자도 같은 링크를 받는지
+- 허브를 얼마나 자주 새로 고칠지(실시간 반영 방식): 지금은 화면에 들어올 때와 내 동작 뒤에만 다시 부른다

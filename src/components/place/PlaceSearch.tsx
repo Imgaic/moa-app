@@ -4,7 +4,7 @@ import type { Place } from '@/api/places';
 import { Icon } from '@/components/ui/Icon';
 import { TextField } from '@/components/ui/TextField';
 
-// 장소 찾기. 피그마에 검색 화면이 없어(docs/open-questions.md) 있는 컴포넌트로 가장 단순하게 만든 임시 모양이다:
+// 장소 찾기. 약속 만들기(정해진 장소)와 허브의 장소 제안이 같이 쓴다. 피그마에 검색 화면이 없어(docs/open-questions.md) 있는 컴포넌트로 가장 단순하게 만든 임시 모양이다:
 // 검색어 칸(Input/Text) 아래에 결과를 장소 줄 모양(핀, 이름, 주소)으로 늘어놓는다. 줄을 누르면 고른다.
 const QUERY_MAX_LENGTH = 30;
 const LIST_TOP = 'mt-[8px]';

@@ -9,17 +9,18 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { getMe } from '@/api/me';
 import { createPlan, type PlanMember } from '@/api/plans';
-import { searchPlaces, type Place } from '@/api/places';
+import type { Place } from '@/api/places';
+import { PlaceSearch } from '@/components/place/PlaceSearch';
 import { CreateSummary } from '@/components/plan-create/CreateSummary';
 import { DateRangePicker } from '@/components/plan-create/DateRangePicker';
 import { DurationPicker } from '@/components/plan-create/DurationPicker';
 import { PlaceOptions } from '@/components/plan-create/PlaceOptions';
-import { PlaceSearch } from '@/components/plan-create/PlaceSearch';
 import { PlanSummaryCard } from '@/components/plan-create/PlanSummaryCard';
 import { Button } from '@/components/ui/Button';
 import { PageTitle } from '@/components/ui/PageTitle';
 import { TextField } from '@/components/ui/TextField';
 import { TopBar } from '@/components/ui/TopBar';
+import { usePlaceSearch } from '@/hooks/usePlaceSearch';
 import { pickRangeDate } from '@/lib/dateRange';
 import { toDateKey } from '@/lib/monthGrid';
 import {
@@ -188,26 +189,8 @@ function StepBody({ step, draft, today, host, onChange, onStep }: StepBodyProps)
   }
 }
 
-// 장소 찾기: 검색어가 바뀔 때마다 api에서 결과를 받아 온다.
+// 장소 찾기: 검색어와 결과는 usePlaceSearch가 들고 있다.
 function PlaceSearchStep({ onPick }: { onPick: (place: Place) => void }) {
-  const [query, setQuery] = useState('');
-  const [places, setPlaces] = useState<Place[] | null>([]);
-
-  useEffect(() => {
-    // 늦게 온 앞 검색어의 결과가 새 결과를 덮지 않게 한다.
-    let current = true;
-    searchPlaces(query)
-      .then((found) => current && setPlaces(found))
-      .catch(() => current && setPlaces([]));
-    return () => {
-      current = false;
-    };
-  }, [query]);
-
-  const changeQuery = (next: string) => {
-    setQuery(next);
-    setPlaces(null);
-  };
-
+  const { query, changeQuery, places } = usePlaceSearch();
   return <PlaceSearch query={query} onChangeQuery={changeQuery} places={places} onPick={onPick} />;
 }

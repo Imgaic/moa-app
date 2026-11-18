@@ -77,3 +77,10 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | Calendar/Range, Date Cell/Range | `src/components/ui/RangeCalendar.tsx` | 2026-11-18 | 달 넘기기 포함. 계산은 `src/lib/monthGrid.ts`(달 칸), `src/lib/dateRange.ts`(범위). 칸 상태에 single(원만) 추가 |
 | Summary/Create | `src/components/plan-create/CreateSummary.tsx` | 2026-11-18 | 답한 값만 넘긴다. 어떤 값을 보일지는 `src/lib/planDraft.ts`의 `summaryOf` |
 | Card/Summary | `src/components/plan-create/PlanSummaryCard.tsx` | 2026-11-18 | `NewPlan`, host, onEdit |
+| Character + 입력 완료 체크 | `src/components/ui/CheckedAvatar.tsx` | 2026-11-18 | `Avatar`를 쓰고 체크 원(지름의 28%)만 얹는다. Hub/Members와 List/Member Row 안의 얼굴 |
+| List/Member Row | `src/components/ui/MemberRow.tsx` | 2026-11-18 | name, photo, status(회색 글자), checked |
+| List/Action Card | `src/components/ui/ActionCard.tsx` | 2026-11-18 | label, onPress. 누르는 동안 살짝 흐려짐(피그마에 없음) |
+| Section/Header | `src/components/ui/SectionHeader.tsx` | 2026-11-18 | 제목 + 오른쪽 알약 버튼(더하기 + 글자) |
+| Card/Place List | `src/components/ui/PlaceListCard.tsx` | 2026-11-18 | 줄마다 핀, 이름, 오른쪽 회색 글자(예: "태혁 제안"). 줄 사이 구분선 |
+| Hub/Members (Collapsed) | `src/components/plan-hub/HubMembers.tsx` | 2026-11-18 | 겹친 얼굴(최대 10) + 입력 현황. 누르면 멤버 모달. 현황 줄은 `plan-hub/MemberProgress.tsx` |
+| Hub/Members (Expanded, 모달) | `src/components/plan-hub/MembersModal.tsx` | 2026-11-18 | React Native `Modal`. 최대 높이 화면의 70%, 넘치면 안에서 스크롤 |
