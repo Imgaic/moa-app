@@ -3,14 +3,13 @@ import { Pressable, Text, View } from 'react-native';
 import type { NewPlan, PlanMember } from '@/api/plans';
 import { Avatar } from '@/components/ui/Avatar';
 import { SummaryItem } from '@/components/ui/SummaryItem';
-import { dateRangeText, durationText } from '@/lib/planCreateText';
+import { dateRangeText, durationText, placeText } from '@/lib/planCreateText';
 
 // 피그마 Card/Summary (2026-11-18 기준). 공유하기 전에 보는 약속 요약. 디자인이 완성 전이라 수치가 바뀔 수 있다.
 const CARD = 'gap-[14px] rounded-[14px] bg-white p-[16px]';
 const AVATAR_SIZE = 50;
 const AVATAR_BORDER = 1.5;
 const HIT_SLOP = 12;
-const RECOMMEND_PLACE_TEXT = '장소 추천';
 
 type PlanSummaryCardProps = {
   plan: NewPlan;
@@ -20,7 +19,6 @@ type PlanSummaryCardProps = {
 };
 
 export function PlanSummaryCard({ plan, host, onEdit }: PlanSummaryCardProps) {
-  const placeText = plan.fixedPlace?.name ?? RECOMMEND_PLACE_TEXT;
   return (
     <View className={CARD}>
       <View className="flex-row items-center gap-[14px]">
@@ -41,7 +39,7 @@ export function PlanSummaryCard({ plan, host, onEdit }: PlanSummaryCardProps) {
           <Text className="font-pretendard text-caption-14 text-blue-50">수정</Text>
         </Pressable>
       </View>
-      <SummaryItem label="장소" value={placeText} />
+      <SummaryItem label="장소" value={placeText(plan)} />
       <SummaryItem label="날짜 범위" value={dateRangeText(plan.dateRange)} />
       <SummaryItem label="필요한 시간" value={durationText(plan.durationMinutes)} />
     </View>

@@ -8,6 +8,10 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 SplashScreen.preventAutoHideAsync();
 
+// 초대 링크(/join/<코드>)나 허브 주소로 바로 열어도 그 아래에 홈을 깔아 둔다.
+// 그래야 참여 뒤 허브에서 뒤로 가면 홈으로 간다(참여 화면은 허브로 바꿔 가서 기록에 없다).
+export const unstable_settings = { anchor: '(tabs)' };
+
 export default function RootLayout() {
   const [loaded, error] = useFonts([
     {

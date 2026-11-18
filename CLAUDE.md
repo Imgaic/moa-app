@@ -97,3 +97,6 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | Input/Time Bar | `src/components/ui/TimeBar.tsx` | 2026-11-18 | 눈금 + 트랙 + 파란 구간 + 손잡이 둘. props는 `TimeWheelPicker`와 같다. 하루 중 "창"만 보이고 끌기·두 손가락 확대(웹은 휠)로 창이 바뀐다. 동작은 `src/hooks/useTimeBarGestures.ts`, 계산은 `src/lib/timeBarWindow.ts`(창), `timeBarScale.ts`(위치·눈금·스냅), `timeBarDrag.ts`(잡을 대상·손잡이 시각) |
 | Card/Time Input (Saved Toggle, 막대 안) | `src/components/my-input/TimeBarPicker.tsx` | 2026-11-18 | 상자 없는 시작/종료 한 줄 + `TimeBar`. 배지 자리는 `TimeInputCard`의 `PICKERS`(T11 비교용 임시 전환 장치와 함께) |
 | badge (회색 알약) | `src/components/ui/Badge.tsx`의 `GrayBadge` | 2026-11-18 | label. 출발지 줄 오른쪽, 막대 아래 |
+| Avatar (카메라 버튼이 붙은 큰 프로필) | `src/components/ui/ProfileAvatar.tsx` | 2026-11-18 | `Avatar`(186) + 안쪽 그림자 + Button/Camera. Empty면 "이름". name, photo, onPressCamera |
+| Card/Invite | `src/components/join/InviteCard.tsx` | 2026-11-18 | `Invitation`을 받는다. 얼굴 3명(호스트 먼저) + 줄 4개. Card/Summary(`PlanSummaryCard`)와 다른 카드 |
+| (참여 화면의 프로필 입력) | `src/components/join/ProfileForm.tsx` | 2026-11-18 | `ProfileAvatar` + 이름 `TextField`. 온보딩 프로필에서 다시 쓸 수 있게 값은 props로 |

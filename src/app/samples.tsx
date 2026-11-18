@@ -18,6 +18,7 @@ import { OptionCard } from '@/components/ui/OptionCard';
 import { PageTitle } from '@/components/ui/PageTitle';
 import { PlaceListCard } from '@/components/ui/PlaceListCard';
 import { PlaceRow } from '@/components/ui/PlaceRow';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
 import { RangeCalendar } from '@/components/ui/RangeCalendar';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { SocialButton } from '@/components/ui/SocialButton';
@@ -283,6 +284,14 @@ export default function TokenSamples() {
             <Avatar name="나해진" size={50} borderWidth={1.5} className="border-gray-20" />
             <Avatar name="나해진" size={128} />
             <Avatar name="나해진" photo={samplePhoto} size={128} />
+          </View>
+        </Section>
+
+        <Section title="Avatar + 카메라 버튼 (ProfileAvatar: Empty, Filled, 사진)">
+          <View className="flex-row flex-wrap items-center gap-3">
+            <ProfileAvatar name="" onPressCamera={() => setPressCount((count) => count + 1)} />
+            <ProfileAvatar name="성예희" onPressCamera={() => setPressCount((count) => count + 1)} />
+            <ProfileAvatar name="성예희" photo={samplePhoto} onPressCamera={() => setPressCount((count) => count + 1)} />
           </View>
         </Section>
 

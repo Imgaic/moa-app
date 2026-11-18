@@ -12,7 +12,8 @@ import { MOCK_PLACES } from './places';
 export const MOCK_EMPTY_PLANS = false;
 
 // 가짜 초대 링크의 앞부분. 실제 형식은 미정이다(docs/open-questions.md).
-const MOCK_INVITE_BASE = 'https://example.com/moa/join/';
+// 경로(/join/<코드>)는 참여 화면 라우트 src/app/join/[code].tsx와 맞춘다. 가짜 코드는 약속 id 그대로다.
+const MOCK_INVITE_BASE = 'https://example.com/join/';
 
 const MEMBER_NAMES = [
   '김태혁',
@@ -96,6 +97,19 @@ export function mockInviteLink(planId: string): string {
   return `${MOCK_INVITE_BASE}${planId}`;
 }
 
+// 초대 링크의 코드로 약속을 찾는다. 가짜 코드는 약속 id와 같다.
+export function findMockPlanByCode(code: string): PlanDetail | undefined {
+  return findMockPlan(code);
+}
+
+// 참여한 사람을 멤버 맨 뒤에 더한다. 이미 멤버면 그대로 둔다.
+// markMockSubmitted처럼 화면이 바뀐 것을 알도록 멤버 목록을 새로 만든다.
+export function addMockMember(planId: string, member: Member) {
+  const plan = findMockPlan(planId);
+  if (!plan || plan.members.some((current) => current.id === member.id)) return;
+  plan.members = [...plan.members, member];
+}
+
 function createMockPlans(now: Date): PlanDetail[] {
   const decided = { hostId: MOCK_ME.id, dateRange: daysFrom(now, 0, 14), durationMinutes: 120 };
   const recommendPlace = { placeMode: 'recommend', fixedPlace: null } as const;
@@ -163,6 +177,18 @@ function createMockPlans(now: Date): PlanDetail[] {
       status: 'recommended',
       confirmed: null,
       members: [person(ME, true), person(PEOPLE.length - 1, true)],
+    },
+    {
+      // 내가 아직 멤버가 아닌 모집 중 약속. 참여 화면을 열어 보는 용도다(/join/plan-invite).
+      ...recommendPlace,
+      id: 'plan-invite',
+      title: '주말 등산',
+      status: 'collecting',
+      confirmed: null,
+      hostId: PEOPLE[TAEHYUK].id,
+      dateRange: daysFrom(now, 5, 20),
+      durationMinutes: 240,
+      members: [person(TAEHYUK, true), person(YEHEE, false), person(DONGHA, true)],
     },
     {
       ...decided,
