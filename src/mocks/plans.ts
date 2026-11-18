@@ -5,6 +5,7 @@ import type { Member, PlanDetail } from '@/api/plans';
 import { toDateKey } from '@/lib/monthGrid';
 
 import { seedMockAvailability } from './availability';
+import { seedMockCandidates } from './candidates';
 import { MOCK_ME } from './me';
 import { MOCK_PLACES } from './places';
 
@@ -66,12 +67,18 @@ function inTenMinutesToday(now: Date): string {
 const placeNamed = (id: string) => MOCK_PLACES.find((place) => place.id === id) ?? null;
 
 let store: PlanDetail[] | null = null;
+// 확정 완료 화면을 이미 본 약속. 처음부터 확정돼 있던 가짜 약속은 본 것으로 둔다.
+const confirmedSeen = new Set<string>();
 
 // 홈 목록. 처음 부를 때 한 번 만든다.
 export function mockPlans(now: Date): PlanDetail[] {
   if (store === null) {
     store = MOCK_EMPTY_PLANS ? [] : createMockPlans(now);
-    store.forEach((plan) => seedMockAvailability(plan.id, plan.dateRange.start));
+    store.forEach((plan) => {
+      seedMockAvailability(plan.id, plan.dateRange.start);
+      seedMockCandidates(plan);
+      if (plan.status === 'confirmed') confirmedSeen.add(plan.id);
+    });
   }
   return store;
 }
@@ -91,6 +98,22 @@ export function markMockSubmitted(planId: string, memberId: string, submitted: b
   const plan = findMockPlan(planId);
   if (!plan) return;
   plan.members = plan.members.map((member) => (member.id === memberId ? { ...member, submitted } : member));
+}
+
+// 투표 마감으로 확정한다. 홈 카드와 허브가 쓰는 시작 시각과 장소가 들어간다.
+export function confirmMockPlan(planId: string, confirmed: NonNullable<PlanDetail['confirmed']>) {
+  const plan = findMockPlan(planId);
+  if (!plan) throw new Error(`없는 약속: ${planId}`);
+  plan.status = 'confirmed';
+  plan.confirmed = confirmed;
+}
+
+export function hasSeenMockConfirmed(planId: string): boolean {
+  return confirmedSeen.has(planId);
+}
+
+export function markMockConfirmedSeen(planId: string) {
+  confirmedSeen.add(planId);
 }
 
 export function mockInviteLink(planId: string): string {
@@ -170,13 +193,36 @@ function createMockPlans(now: Date): PlanDetail[] {
       members: PEOPLE.map((_, i) => person(i, i < CROWD_SUBMITTED)),
     },
     {
+      // 내가 호스트인 추천 나옴 약속. 두 사람이 투표했고 나는 아직이다(피그마 05 Hub / Host - Recommended - Voting).
+      // 후보와 투표는 src/mocks/candidates.ts
       ...decided,
       ...recommendPlace,
       id: 'plan-recommended',
       title: '가족 모임',
       status: 'recommended',
       confirmed: null,
-      members: [person(ME, true), person(PEOPLE.length - 1, true)],
+      members: [person(TAEHYUK, true), person(YEHEE, true), person(DONGHA, true), person(ME, true)],
+    },
+    {
+      // 나를 포함해 모두 투표한 약속(피그마 05 Hub / Host - Recommended - Voted)
+      ...decided,
+      ...recommendPlace,
+      id: 'plan-voted',
+      title: '동기 모임',
+      status: 'recommended',
+      confirmed: null,
+      members: [person(ME, true), person(TAEHYUK, true), person(YEHEE, true), person(DONGHA, true)],
+    },
+    {
+      // 내가 참가자인 추천 나옴 약속. 투표는 되고 마감은 없다.
+      ...decided,
+      ...recommendPlace,
+      id: 'plan-guest-vote',
+      title: '독서 모임',
+      status: 'recommended',
+      confirmed: null,
+      hostId: PEOPLE[MINSU].id,
+      members: [person(MINSU, true), person(ME, true), person(JIHOON, true), person(SEOYEON, true)],
     },
     {
       // 내가 아직 멤버가 아닌 모집 중 약속. 참여 화면을 열어 보는 용도다(/join/plan-invite).

@@ -1,6 +1,6 @@
 import { Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 
-import type { Member } from '@/api/plans';
+import type { PlanMember } from '@/api/plans';
 import { Icon } from '@/components/ui/Icon';
 import { MemberRow } from '@/components/ui/MemberRow';
 
@@ -14,16 +14,21 @@ const SIDE_MARGIN = 32;
 // 멤버가 많으면 이 높이를 넘지 않고 안에서 스크롤한다. 화면 위아래가 보여야 "모달"로 읽힌다.
 const MAX_HEIGHT_RATIO = 0.7;
 const HIT_SLOP = 12;
-const SUBMITTED_TEXT = '입력 완료';
-const NOT_SUBMITTED_TEXT = '입력 중';
+
+// 모집 중에는 입력했는지, 추천 나옴에는 투표했는지가 체크다.
+export type CheckedMember = PlanMember & { checked: boolean };
+
+// 체크된 사람과 아닌 사람의 상태 글자. 예: 입력 완료 / 입력 중
+export type CheckTexts = { done: string; pending: string };
 
 type MembersModalProps = {
   visible: boolean;
-  members: Member[];
+  members: CheckedMember[];
+  texts: CheckTexts;
   onClose: () => void;
 };
 
-export function MembersModal({ visible, members, onClose }: MembersModalProps) {
+export function MembersModal({ visible, members, texts, onClose }: MembersModalProps) {
   const { height } = useWindowDimensions();
   return (
     <Modal visible={visible} transparent animationType="fade" statusBarTranslucent onRequestClose={onClose}>
@@ -36,7 +41,7 @@ export function MembersModal({ visible, members, onClose }: MembersModalProps) {
         />
         <View className={CARD} style={{ maxHeight: height * MAX_HEIGHT_RATIO }}>
           <View className="flex-row items-center justify-between">
-            <MemberProgress members={members} />
+            <MemberProgress members={members} doneText={texts.done} />
             <Pressable accessibilityRole="button" accessibilityLabel="닫기" hitSlop={HIT_SLOP} onPress={onClose}>
               <Icon name="close" className="text-gray-60" />
             </Pressable>
@@ -47,8 +52,8 @@ export function MembersModal({ visible, members, onClose }: MembersModalProps) {
                 key={member.id}
                 name={member.name}
                 photo={member.avatarUrl ? { uri: member.avatarUrl } : undefined}
-                status={member.submitted ? SUBMITTED_TEXT : NOT_SUBMITTED_TEXT}
-                checked={member.submitted}
+                status={member.checked ? texts.done : texts.pending}
+                checked={member.checked}
               />
             ))}
           </ScrollView>

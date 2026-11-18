@@ -2,7 +2,15 @@
 // 백엔드 API가 나오기 전까지는 src/mocks/의 가짜 데이터를 돌려준다. 백엔드가 오면 함수 안만 바꾼다.
 // 타입은 화면이 실제로 쓰는 필드만 담은 초안이다(전체 초안은 docs/user-flow.md 9장). 필드 이름은 백엔드와 맞춰야 한다.
 import type { DateKey } from '@/lib/monthGrid';
-import { addMockPlan, findMockPlan, mockInviteLink, mockPlans } from '@/mocks/plans';
+import { addMockCandidates } from '@/mocks/candidates';
+import {
+  addMockPlan,
+  findMockPlan,
+  hasSeenMockConfirmed,
+  markMockConfirmedSeen,
+  mockInviteLink,
+  mockPlans,
+} from '@/mocks/plans';
 
 import { getMe, getSignedInMe } from './me';
 import type { Place } from './places';
@@ -90,11 +98,22 @@ export async function createPlan(newPlan: NewPlan): Promise<CreatedPlan> {
   return { plan, inviteLink: mockInviteLink(plan.id) };
 }
 
-// 호스트가 입력을 마감하고 추천을 받는다. 약속이 추천 나옴 상태가 된다.
+// 호스트가 입력을 마감하고 추천을 받는다. 약속이 추천 나옴 상태가 되고 후보(src/api/candidates.ts)가 생긴다.
 // 호스트인지 확인하는 일은 서버가 한다(게스트 인증과 함께 미정). 가짜 구현은 확인하지 않는다.
 export async function closeAndRecommend(planId: string): Promise<void> {
   await wait();
   const plan = findMockPlan(planId);
   if (!plan) throw new Error(`없는 약속: ${planId}`);
   plan.status = 'recommended';
+  addMockCandidates(plan);
+}
+
+// 확정 완료 화면(09 Confirm / Done)을 이 약속에서 이미 봤는지.
+// 기록을 서버에 둘지 기기에 둘지 미정이라(docs/open-questions.md 4장), 가짜는 앱이 켜져 있는 동안만 기억한다.
+export async function hasSeenConfirmedNotice(planId: string): Promise<boolean> {
+  return hasSeenMockConfirmed(planId);
+}
+
+export async function markConfirmedNoticeSeen(planId: string): Promise<void> {
+  markMockConfirmedSeen(planId);
 }

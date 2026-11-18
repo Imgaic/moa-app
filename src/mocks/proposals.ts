@@ -23,6 +23,9 @@ const proposalsByPlan = new Map<string, PlaceProposal[]>([
       { id: 'proposal-5', memberId: 'm6', place: place('place-5') },
     ],
   ],
+  // 추천 나옴 약속에 제안된 장소의 후보가 같이 보이게 한다.
+  ['plan-voted', [{ id: 'proposal-6', memberId: 'm3', place: place('place-7') }]],
+  ['plan-guest-vote', [{ id: 'proposal-7', memberId: 'm7', place: place('place-8') }]],
 ]);
 
 export function mockProposals(planId: string): PlaceProposal[] {

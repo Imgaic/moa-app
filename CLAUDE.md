@@ -80,10 +80,10 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | Character + 입력 완료 체크 | `src/components/ui/CheckedAvatar.tsx` | 2026-11-18 | `Avatar`를 쓰고 체크 원(지름의 28%)만 얹는다. Hub/Members와 List/Member Row 안의 얼굴 |
 | List/Member Row | `src/components/ui/MemberRow.tsx` | 2026-11-18 | name, photo, status(회색 글자), checked |
 | List/Action Card | `src/components/ui/ActionCard.tsx` | 2026-11-18 | label, onPress. 누르는 동안 살짝 흐려짐(피그마에 없음) |
-| Section/Header | `src/components/ui/SectionHeader.tsx` | 2026-11-18 | 제목 + 오른쪽 알약 버튼(더하기 + 글자) |
+| Section/Header | `src/components/ui/SectionHeader.tsx` | 2026-11-18 | 제목 + 오른쪽 알약 버튼(더하기 + 글자). 버튼은 `action`이 없으면 없다(피그마 showAction, 추천 후보 머리) |
 | Card/Place List | `src/components/ui/PlaceListCard.tsx` | 2026-11-18 | 줄마다 핀, 이름, 오른쪽 회색 글자(예: "태혁 제안"). 줄 사이 구분선 |
-| Hub/Members (Collapsed) | `src/components/plan-hub/HubMembers.tsx` | 2026-11-18 | 겹친 얼굴(최대 10) + 입력 현황. 누르면 멤버 모달. 현황 줄은 `plan-hub/MemberProgress.tsx` |
-| Hub/Members (Expanded, 모달) | `src/components/plan-hub/MembersModal.tsx` | 2026-11-18 | React Native `Modal`. 최대 높이 화면의 70%, 넘치면 안에서 스크롤 |
+| Hub/Members (Collapsed) | `src/components/plan-hub/HubMembers.tsx` | 2026-11-18 | 겹친 얼굴(최대 10) + 현황. 체크는 `checked`(모집 중 입력, 추천 나옴 투표), 글자는 `doneText`. 누르면 멤버 모달. 현황 줄은 `plan-hub/MemberProgress.tsx` |
+| Hub/Members (Expanded, 모달) | `src/components/plan-hub/MembersModal.tsx` | 2026-11-18 | React Native `Modal`. 최대 높이 화면의 70%, 넘치면 안에서 스크롤. 상태 글자는 `texts`(입력 완료/입력 중, 투표 완료/투표 전) |
 | Date Cell, Date Cell/Bar | `src/components/ui/MonthDateCell.tsx` | 2026-11-18 | 큰 달력 칸. 고른 모양(single/start/middle/end)은 테두리, 오늘은 날짜 테두리 원, 막대는 Available1~3 최대 3개 + "+". Event(내 일정) 막대는 없음 |
 | Date Cell2, Date Cell/Bar Compact | `src/components/ui/CompactDateCell.tsx` | 2026-11-18 | 작은 달력 칸. 원 + 띠(가운데 날은 띠만). props는 `MonthDateCell`과 같음 |
 | Calendar/Month | `src/components/ui/MonthCalendar.tsx` | 2026-11-18 | 왼쪽 위 달 넘기기 + 요일 + 큰 칸. 칸 모양은 `lookOf`로 받음. "내 일정" 토글 없음 |
@@ -100,3 +100,7 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | Avatar (카메라 버튼이 붙은 큰 프로필) | `src/components/ui/ProfileAvatar.tsx` | 2026-11-18 | `Avatar`(186) + 안쪽 그림자 + Button/Camera. Empty면 "이름". name, photo, onPressCamera |
 | Card/Invite | `src/components/join/InviteCard.tsx` | 2026-11-18 | `Invitation`을 받는다. 얼굴 3명(호스트 먼저) + 줄 4개. Card/Summary(`PlanSummaryCard`)와 다른 카드 |
 | (참여 화면의 프로필 입력) | `src/components/join/ProfileForm.tsx` | 2026-11-18 | `ProfileAvatar` + 이름 `TextField`. 온보딩 프로필에서 다시 쓸 수 있게 값은 props로 |
+| Card/Candidate | `src/components/ui/CandidateCard.tsx` | 2026-11-18 | badge, best(Type=Best), title, attendance, everyone(Attendance=All), detail, checked, onPress(없으면 못 누름). 글자는 `src/lib/candidateText.ts`. 제목 두 줄까지, 배지 최소 너비 48 |
+| (허브 추천 나옴 내용) | `src/components/plan-hub/RecommendedContent.tsx` | 2026-11-18 | 05 Hub / Host - Recommended - Empty·Voting·Voted. 버튼 규칙은 `src/lib/voteStatus.ts`, 확정 규칙(T2)은 `src/lib/voteResult.ts` |
+| 09 Confirm / Done (Illustration/Done 포함) | `src/components/plan-hub/ConfirmedNotice.tsx` | 2026-11-18 | 허브 위에 덮는 화면. 2.5초 뒤 또는 누르면 닫힘. 보일지는 `src/lib/confirmedNotice.ts` |
+| (확정 허브, 임시 T4) | `src/components/plan-hub/ConfirmedContent.tsx` | 2026-11-18 | 디자인 없음. List/Summary Item + List/Member Row로 일시, 시간, 장소, 참가자 |
