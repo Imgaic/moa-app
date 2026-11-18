@@ -1,6 +1,13 @@
 import { cssInterop } from 'nativewind';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
+import Animated, {
+  Easing,
+  ReduceMotion,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 // placeholderClassName의 글자색(text-*)을 placeholderTextColor로 넘긴다.
 cssInterop(TextInput, {
@@ -12,8 +19,13 @@ cssInterop(TextInput, {
 const GAP = 'gap-[8px]';
 const FIELD = 'h-[45px] flex-row items-center py-[2px]';
 const LINE_DEFAULT = 'border-b border-gray-40';
-const LINE_FOCUSED = 'border-b-[1.5px] border-blue-50';
+// 포커스 밑줄(파랑, 1.5)은 회색 밑줄(1) 위에 겹쳐 두고 투명도로 나타낸다. 바깥 아래 끝을 회색 밑줄과 맞춘다.
+const LINE_FOCUSED = { height: 1.5, bottom: -1 };
 const CONFIRM_HIT_SLOP = 12;
+
+// 포커스 밑줄 전환. 피그마에 값이 없어 구현에서 정했다. "동작 줄이기"가 켜져 있으면 바로 바뀐다.
+const FOCUS_DURATION = 200;
+const FOCUS_EASING = Easing.out(Easing.cubic);
 
 type TextFieldProps = {
   value: string;
@@ -40,11 +52,23 @@ export function TextField({
 }: TextFieldProps) {
   const filled = value.length > 0;
   const [focused, setFocused] = useState(false);
+  const focus = useSharedValue(0);
+
+  useEffect(() => {
+    focus.value = withTiming(focused ? 1 : 0, {
+      duration: FOCUS_DURATION,
+      easing: FOCUS_EASING,
+      reduceMotion: ReduceMotion.System,
+    });
+  }, [focused, focus]);
+
+  const focusLine = useAnimatedStyle(() => ({ opacity: focus.value }));
+
   return (
     <View className={GAP}>
       {label ? <Text className="font-pretendard text-body2 text-gray-50">{label}</Text> : null}
 
-      <View className={`${FIELD} ${focused ? LINE_FOCUSED : LINE_DEFAULT}`}>
+      <View className={`${FIELD} ${LINE_DEFAULT}`}>
         <TextInput
           value={value}
           onChangeText={onChangeText}
@@ -64,6 +88,11 @@ export function TextField({
             <Text className="font-pretendard text-caption-14 text-black">{confirmLabel}</Text>
           </Pressable>
         ) : null}
+        <Animated.View
+          pointerEvents="none"
+          style={[{ position: 'absolute', left: 0, right: 0, ...LINE_FOCUSED }, focusLine]}>
+          <View className="flex-1 bg-blue-50" />
+        </Animated.View>
       </View>
 
       <View className="flex-row justify-between">
