@@ -5,6 +5,7 @@ import {
   initialWindow,
   MIN_WINDOW_MINUTES,
   panWindow,
+  revealMinutes,
   windowSpan,
   zoomWindow,
 } from './timeBarWindow';
@@ -95,5 +96,20 @@ describe('edgePushMinutes', () => {
   it('창 밖으로 손가락이 나가도 가장 빠른 속도를 넘지 않는다', () => {
     expect(edgePushMinutes(width + 100, width, edgeZone, span, 100)).toBeCloseTo(30);
     expect(edgePushMinutes(-100, width, edgeZone, span, 100)).toBeCloseTo(-30);
+  });
+});
+
+describe('revealMinutes', () => {
+  const window = { start: 8 * HOUR, end: 18 * HOUR };
+
+  it('창 안의 시각이면 창을 그대로 둔다', () => {
+    expect(revealMinutes(window, 10 * HOUR)).toEqual(window);
+    expect(revealMinutes(window, 8 * HOUR)).toEqual(window);
+    expect(revealMinutes(window, 18 * HOUR)).toEqual(window);
+  });
+
+  it('창 밖의 시각이면 그 시각이 창 끝에 오도록 폭을 지킨 채 옮긴다', () => {
+    expect(revealMinutes(window, 7.5 * HOUR)).toEqual({ start: 7.5 * HOUR, end: 17.5 * HOUR });
+    expect(revealMinutes(window, 19 * HOUR)).toEqual({ start: 9 * HOUR, end: 19 * HOUR });
   });
 });

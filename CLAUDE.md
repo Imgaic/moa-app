@@ -74,7 +74,7 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | Input/Field, Input/Field Group | `src/components/ui/InputField.tsx` | 2026-11-18 | `InputFieldGroup`(children) + `InputField`(selected). 누르는 동작 없음 |
 | Card/Option | `src/components/ui/OptionCard.tsx` | 2026-11-18 | 고르기 카드. 체크는 `Checkbox`. 아래 칸(Show Place)은 children |
 | List/Place Row | `src/components/ui/PlaceRow.tsx` | 2026-11-18 | Selected / Search. Proposal은 아직 만들지 않음 |
-| Calendar/Range, Date Cell/Range | `src/components/ui/RangeCalendar.tsx` | 2026-11-18 | 달 넘기기 포함. 계산은 `src/lib/monthGrid.ts`(달 칸), `src/lib/dateRange.ts`(범위). 칸 상태에 single(원만) 추가 |
+| Calendar/Range, Date Cell/Range | `src/components/ui/RangeCalendar.tsx` | 2026-11-18 | 달 넘기기 포함. 계산은 `src/lib/monthGrid.ts`(달 칸), `src/lib/dateRange.ts`(범위). 칸 상태에 single(원만) 추가. 칸의 낭독기 이름은 `calendarDayLabel`(월, 일, 요일, 오늘) |
 | Summary/Create | `src/components/plan-create/CreateSummary.tsx` | 2026-11-18 | 답한 값만 넘긴다. 어떤 값을 보일지는 `src/lib/planDraft.ts`의 `summaryOf` |
 | Card/Summary | `src/components/plan-create/PlanSummaryCard.tsx` | 2026-11-18 | `NewPlan`, host, onEdit |
 | Character + 입력 완료 체크 | `src/components/ui/CheckedAvatar.tsx` | 2026-11-18 | `Avatar`를 쓰고 체크 원(지름의 28%)만 얹는다. Hub/Members와 List/Member Row 안의 얼굴 |
@@ -84,8 +84,8 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | Card/Place List | `src/components/ui/PlaceListCard.tsx` | 2026-11-18 | 줄마다 핀, 이름, 오른쪽 회색 글자(예: "태혁 제안"). 줄 사이 구분선 |
 | Hub/Members (Collapsed) | `src/components/plan-hub/HubMembers.tsx` | 2026-11-18 | 겹친 얼굴(최대 10) + 현황. 체크는 `checked`(모집 중 입력, 추천 나옴 투표), 글자는 `doneText`. 누르면 멤버 모달. 현황 줄은 `plan-hub/MemberProgress.tsx` |
 | Hub/Members (Expanded, 모달) | `src/components/plan-hub/MembersModal.tsx` | 2026-11-18 | React Native `Modal`. 최대 높이 화면의 70%, 넘치면 안에서 스크롤. 상태 글자는 `texts`(입력 완료/입력 중, 투표 완료/투표 전) |
-| Date Cell, Date Cell/Bar | `src/components/ui/MonthDateCell.tsx` | 2026-11-18 | 큰 달력 칸. 고른 모양(single/start/middle/end)은 테두리, 오늘은 날짜 테두리 원, 막대는 Available1~3 최대 3개 + "+". Event(내 일정) 막대는 없음 |
-| Date Cell2, Date Cell/Bar Compact | `src/components/ui/CompactDateCell.tsx` | 2026-11-18 | 작은 달력 칸. 원 + 띠(가운데 날은 띠만). props는 `MonthDateCell`과 같음 |
+| Date Cell, Date Cell/Bar | `src/components/ui/MonthDateCell.tsx` | 2026-11-18 | 큰 달력 칸. 고른 모양(single/start/middle/end)은 테두리, 오늘은 날짜 테두리 원, 막대는 Available1~3 최대 3개 + "+". Event(내 일정) 막대는 없음. 낭독기 이름은 `dateKey`로 `src/lib/dateText.ts`의 `calendarDayLabel`("11월 24일 화요일, 오늘, 가능 시간 2개") |
+| Date Cell2, Date Cell/Bar Compact | `src/components/ui/CompactDateCell.tsx` | 2026-11-18 | 작은 달력 칸. 원 + 띠(가운데 날은 띠만). props는 `MonthDateCell`과 같음(낭독기 이름도 같다) |
 | Calendar/Month | `src/components/ui/MonthCalendar.tsx` | 2026-11-18 | 왼쪽 위 달 넘기기 + 요일 + 큰 칸. 칸 모양은 `lookOf`로 받음. "내 일정" 토글 없음 |
 | Calendar/Compact | `src/components/ui/CompactCalendar.tsx` | 2026-11-18 | 요일 + 작은 칸. 달 이름은 상단 바(stepTitle) |
 | (달력 요일 줄) | `src/components/ui/WeekdayRow.tsx` | 2026-11-18 | Calendar/Range, Month, Compact 공용 |
@@ -94,7 +94,7 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | Card/Time Input 안 time-range | `src/components/ui/TimeRangeTabs.tsx` | 2026-11-18 | 시작/종료 두 칸, 흰 칸이 고치는 쪽 |
 | Input/Time Picker | `src/components/my-input/TimeWheelPicker.tsx`, 칸 하나는 `src/components/ui/WheelColumn.tsx` | 2026-11-18 | props는 startMinutes, endMinutes, onChange뿐(막대 안과 바꿔 끼움). 오전·오후 / 시 / 분(5분) |
 | List/Origin Row | `src/components/ui/OriginRow.tsx` | 2026-11-18 | name(null이면 "출발 장소"), badge(`GrayBadge`), onPress |
-| Input/Time Bar | `src/components/ui/TimeBar.tsx` | 2026-11-18 | 눈금 + 트랙 + 파란 구간 + 손잡이 둘. props는 `TimeWheelPicker`와 같다. 하루 중 "창"만 보이고 끌기·두 손가락 확대(웹은 휠)로 창이 바뀐다. 동작은 `src/hooks/useTimeBarGestures.ts`, 계산은 `src/lib/timeBarWindow.ts`(창), `timeBarScale.ts`(위치·눈금·스냅), `timeBarDrag.ts`(잡을 대상·손잡이 시각) |
+| Input/Time Bar | `src/components/ui/TimeBar.tsx` | 2026-11-18 | 눈금 + 트랙 + 파란 구간 + 손잡이 둘. props는 `TimeWheelPicker`와 같다. 하루 중 "창"만 보이고 끌기·두 손가락 확대(웹은 휠)로 창이 바뀐다. 동작은 `src/hooks/useTimeBarGestures.ts`, 계산은 `src/lib/timeBarWindow.ts`(창), `timeBarScale.ts`(위치·눈금·스냅), `timeBarDrag.ts`(잡을 대상·손잡이 시각). 낭독기와 키보드는 막대 왼쪽·오른쪽 절반의 보이지 않는 자리(`EdgeAdjuster`, "시작 시각" / "종료 시각")에서 올리기·내리기(웹은 화살표 키)로 한 스냅 간격씩 바꾼다 |
 | Card/Time Input (Saved Toggle, 막대 안) | `src/components/my-input/TimeBarPicker.tsx` | 2026-11-18 | 상자 없는 시작/종료 한 줄 + `TimeBar`. 배지 자리는 `TimeInputCard`의 `PICKERS`(T11 비교용 임시 전환 장치와 함께) |
 | badge (회색 알약) | `src/components/ui/Badge.tsx`의 `GrayBadge` | 2026-11-18 | label. 출발지 줄 오른쪽, 막대 아래 |
 | Avatar (카메라 버튼이 붙은 큰 프로필) | `src/components/ui/ProfileAvatar.tsx` | 2026-11-18 | `Avatar`(186) + 안쪽 그림자 + Button/Camera. Empty면 "이름". name, photo, onPressCamera |

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { dayCellState, type DateRange, type DayCellState } from '@/lib/dateRange';
+import { calendarDayLabel } from '@/lib/dateText';
 import {
   addMonths,
   isEarlierMonth,
@@ -71,6 +72,7 @@ export function RangeCalendar({ range, today, onPickDate }: RangeCalendarProps) 
                 key={day.key}
                 day={day}
                 state={dayCellState(range, day, today)}
+                today={day.key === today}
                 onPress={() => onPickDate(day.key)}
               />
             ))}
@@ -81,13 +83,21 @@ export function RangeCalendar({ range, today, onPickDate }: RangeCalendarProps) 
   );
 }
 
-function DateCell({ day, state, onPress }: { day: CalendarDay; state: DayCellState; onPress: () => void }) {
+type DateCellProps = {
+  day: CalendarDay;
+  state: DayCellState;
+  // 오늘 표시는 그리지 않고 화면 낭독기 이름에만 쓴다.
+  today: boolean;
+  onPress: () => void;
+};
+
+function DateCell({ day, state, today, onPress }: DateCellProps) {
   const band = BAND[state];
   const circled = state === 'start' || state === 'end' || state === 'single';
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${day.day}일`}
+      accessibilityLabel={calendarDayLabel(day.key, { today })}
       accessibilityState={{ disabled: state === 'disabled', selected: circled }}
       disabled={state === 'disabled'}
       onPress={onPress}

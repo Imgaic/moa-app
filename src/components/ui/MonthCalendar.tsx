@@ -15,7 +15,7 @@ const GRID_TOP = 10;
 const ARROW_SIZE = 18;
 const HIT_SLOP = 12;
 
-export type DayLook = Omit<DateCellProps, 'day' | 'weekday' | 'onPress'>;
+export type DayLook = Omit<DateCellProps, 'dateKey' | 'day' | 'weekday' | 'onPress'>;
 
 type MonthCalendarProps = {
   month: YearMonth;
@@ -57,6 +57,7 @@ export function MonthCalendar({
             {week.map((day) => (
               <MonthDateCell
                 key={day.key}
+                dateKey={day.key}
                 day={day.day}
                 weekday={day.weekday}
                 {...lookOf(day)}

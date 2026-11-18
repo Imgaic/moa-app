@@ -1,5 +1,5 @@
 // 시간 막대의 "창"(지금 보이는 구간)을 정하고 옮긴다. 실제 축은 하루 전체(0시~24시)이고 창은 그 일부다.
-// 처음 창, 두 손가락 확대·축소, 축 끌기, 손잡이가 끝에 닿았을 때 밀기. 어느 경우에도 창은 하루를 벗어나지 않는다.
+// 처음 창, 두 손가락 확대·축소, 축 끌기, 손잡이가 끝에 닿았을 때 밀기, 창 밖으로 나간 시각 따라가기. 어느 경우에도 창은 하루를 벗어나지 않는다.
 // 시각은 자정부터 센 분이다. 창의 끝은 분 단위로 떨어지지 않아도 된다(손가락을 따라 부드럽게 움직이게).
 const HOUR = 60;
 export const DAY_MINUTES = 24 * HOUR;
@@ -42,6 +42,13 @@ export function zoomWindow(window: TimeWindow, anchorRatio: number, scale: numbe
 
 export function panWindow(window: TimeWindow, deltaMinutes: number): TimeWindow {
   return clampWindow(window.start + deltaMinutes, windowSpan(window));
+}
+
+// 손가락 없이 시각이 바뀌었을 때(화면 낭독기의 올리기·내리기) 그 시각이 창 밖이면 창 끝에 오도록 옮긴다.
+export function revealMinutes(window: TimeWindow, minutes: number): TimeWindow {
+  if (minutes < window.start) return panWindow(window, minutes - window.start);
+  if (minutes > window.end) return panWindow(window, minutes - window.end);
+  return window;
 }
 
 // 손가락이 창 양 끝의 띠(edgeZone, 화면 점) 안에 있으면 들어간 깊이에 비례해 창을 민다.

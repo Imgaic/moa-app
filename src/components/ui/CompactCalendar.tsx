@@ -26,6 +26,7 @@ export function CompactCalendar({ month, lookOf, onPressDay }: CompactCalendarPr
             {week.map((day) => (
               <CompactDateCell
                 key={day.key}
+                dateKey={day.key}
                 day={day.day}
                 weekday={day.weekday}
                 {...lookOf(day)}
