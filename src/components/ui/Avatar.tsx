@@ -58,7 +58,8 @@ type CircleProps = {
 };
 
 // 사진이 있으면 사진, 없으면 회색 원에 이름 뒤 두 글자.
-function AvatarCircle({ name, photo, size, className = '', borderWidth, innerShadow }: CircleProps) {
+// 홈 카드의 겹친 얼굴(피그마 Character 자리)에도 쓴다.
+export function AvatarCircle({ name, photo, size, className = '', borderWidth, innerShadow }: CircleProps) {
   const fontSize = Math.round(size * TEXT_RATIO);
   return (
     <View
