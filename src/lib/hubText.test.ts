@@ -45,9 +45,9 @@ describe('conditionText', () => {
 });
 
 describe('progressText', () => {
-  it('입력한 사람 수 / 전체 인원', () => {
-    expect(progressText([{ submitted: true }, { submitted: false }, { submitted: true }])).toBe('2/3명');
-    expect(progressText([{ submitted: false }])).toBe('0/1명');
+  it('체크된 사람 수 / 전체 인원', () => {
+    expect(progressText([{ checked: true }, { checked: false }, { checked: true }])).toBe('2/3명');
+    expect(progressText([{ checked: false }])).toBe('0/1명');
   });
 });
 

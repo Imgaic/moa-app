@@ -19,6 +19,7 @@ const CARD_TOP = 16;
 const SECTION_TOP = 32;
 const LIST_TOP = 16;
 const BUTTON_BOTTOM = 3;
+const CHECK_TEXTS = { done: '입력 완료', pending: '입력 중' };
 
 type CollectingContentProps = {
   members: Member[];
@@ -44,12 +45,13 @@ export function CollectingContent({
 }: CollectingContentProps) {
   const { bottom } = useSafeAreaInsets();
   const [membersOpen, setMembersOpen] = useState(false);
+  const checkedMembers = members.map((member) => ({ ...member, checked: member.submitted }));
 
   return (
     <View className="flex-1">
       <ScrollView className="flex-1" contentContainerClassName="px-[32px] pb-[24px]">
         <View style={{ marginTop: MEMBERS_TOP }}>
-          <HubMembers members={members} onPress={() => setMembersOpen(true)} />
+          <HubMembers members={checkedMembers} doneText={CHECK_TEXTS.done} onPress={() => setMembersOpen(true)} />
         </View>
         <View style={{ marginTop: CARD_TOP }}>
           <ActionCard
@@ -58,7 +60,7 @@ export function CollectingContent({
           />
         </View>
         <View style={{ marginTop: SECTION_TOP }}>
-          <SectionHeader title="제안된 장소" actionLabel="장소 제안" onAction={onPropose} />
+          <SectionHeader title="제안된 장소" action={{ label: '장소 제안', onPress: onPropose }} />
         </View>
         {proposals.length > 0 ? (
           <View style={{ marginTop: LIST_TOP }}>
@@ -76,7 +78,12 @@ export function CollectingContent({
         )}
       </View>
 
-      <MembersModal visible={membersOpen} members={members} onClose={() => setMembersOpen(false)} />
+      <MembersModal
+        visible={membersOpen}
+        members={checkedMembers}
+        texts={CHECK_TEXTS}
+        onClose={() => setMembersOpen(false)}
+      />
     </View>
   );
 }

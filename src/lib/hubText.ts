@@ -1,4 +1,4 @@
-// 약속 허브에 보이는 글자: 조건 한 줄, 입력 현황("3/4명"), 제안한 사람("태혁 제안").
+// 약속 허브에 보이는 글자: 조건 한 줄, 입력·투표 현황("3/4명"), 제안한 사람("태혁 제안").
 import type { Member, PlanDetail } from '@/api/plans';
 
 import { avatarText } from './avatarText';
@@ -23,10 +23,10 @@ function rangeText({ start, end }: PlanDetail['dateRange']): string {
   return `${monthDayText(start)} ~ ${endText}`;
 }
 
-// "입력한 사람 / 전체 인원"
-export function progressText(members: Pick<Member, 'submitted'>[]): string {
-  const submitted = members.filter((member) => member.submitted).length;
-  return `${submitted}/${members.length}명`;
+// "체크된 사람 / 전체 인원". 모집 중에는 입력한 사람, 추천 나옴에는 투표한 사람이 체크된다.
+export function progressText(members: { checked: boolean }[]): string {
+  const checked = members.filter((member) => member.checked).length;
+  return `${checked}/${members.length}명`;
 }
 
 // 피그마 예시(김태혁 → "태혁 제안")가 아바타 글자와 같은 규칙(이름 뒤 두 글자)이라 avatarText를 다시 쓴다.

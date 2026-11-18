@@ -8,6 +8,7 @@ import { Avatar } from '@/components/ui/Avatar';
 import { ProgressBadge, Tooltip } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { CheckedAvatar } from '@/components/ui/CheckedAvatar';
+import { CandidateCard } from '@/components/ui/CandidateCard';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { CompactDateCell } from '@/components/ui/CompactDateCell';
 import { DoneIllustration, Icon, type IconName } from '@/components/ui/Icon';
@@ -57,6 +58,32 @@ const tabs: { icon: TabIcon; label: string }[] = [
 
 // 날짜 칸 견본: 피그마 Date Cell, Date Cell2의 State 순서(기본, 선택, 시작, 중간, 끝, 비활성)와 그 밖의 상태
 const noop = () => {};
+const CANDIDATE_SAMPLES = [
+  {
+    badge: '추천 1',
+    best: true,
+    title: '4월 1일 (수) 오후 7:00 사당역',
+    attendance: '4명 모두',
+    everyone: true,
+    detail: '· 평균 38분 · 최대 42분',
+  },
+  {
+    badge: '추천 3',
+    best: false,
+    title: '4월 24일 (금) 오후 7:30 사당역',
+    attendance: '3명 가능 · 동하 제외',
+    everyone: false,
+    detail: '· 평균 40분 · 최대 55분',
+  },
+  {
+    badge: '태혁 제안',
+    best: false,
+    title: '4월 3일 (금) 오후 6:00 홍대입구역 2호선',
+    attendance: '4명 모두',
+    everyone: true,
+    detail: '· 평균 45분 · 최대 58분',
+  },
+];
 const cell = (patch: Partial<DateCellProps>): DateCellProps => ({
   day: 2,
   weekday: 3,
@@ -120,6 +147,7 @@ const sizes = [
 
 export default function TokenSamples() {
   const [pressCount, setPressCount] = useState(0);
+  const [candidatePick, setCandidatePick] = useState('추천 1');
   const [toggleOff, setToggleOff] = useState(false);
   const [toggleOn, setToggleOn] = useState(true);
   const [checkOff, setCheckOff] = useState(false);
@@ -367,11 +395,20 @@ export default function TokenSamples() {
 
         <Section title={`List/Action Card · Section/Header · 누른 횟수 ${pressCount}`}>
           <ActionCard label="가능한 일정 입력하러 가기" onPress={() => setPressCount((n) => n + 1)} />
-          <SectionHeader
-            title="제안된 장소"
-            actionLabel="장소 제안"
-            onAction={() => setPressCount((n) => n + 1)}
-          />
+          <SectionHeader title="제안된 장소" action={{ label: '장소 제안', onPress: () => setPressCount((n) => n + 1) }} />
+          <SectionHeader title="추천 후보" />
+        </Section>
+
+        <Section title={`Card/Candidate (Best·All, Default·Partial, 제안, 누를 수 없음) · 고른 카드: ${candidatePick}`}>
+          {CANDIDATE_SAMPLES.map((sample) => (
+            <CandidateCard
+              key={sample.badge}
+              {...sample}
+              checked={candidatePick === sample.badge}
+              onPress={() => setCandidatePick(sample.badge)}
+            />
+          ))}
+          <CandidateCard {...CANDIDATE_SAMPLES[0]} checked />
         </Section>
 
         <Section title="Card/Place List (한 줄, 여러 줄)">
