@@ -60,3 +60,11 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | Tooltip/Recent, Badge/Progress | `src/components/ui/Badge.tsx` | 2026-11-18 | `Tooltip`(label), `ProgressBadge`(count, label) |
 | Card/Plan | `src/components/home/PlanCard.tsx` | 2026-11-18 | `plan`, `now`, `onPress`. 라벨은 `src/lib/planLabel.ts`. 확정 전이면 시각·장소 "미정". 얼굴은 앞의 2명 |
 | Card/Today | `src/components/home/TodayCard.tsx` | 2026-11-18 | 확정된 오늘 약속(`ConfirmedPlan`)만 받는다. 얼굴 4명 + "외 N명". 얼굴 링(진척도)은 그리지 않음 |
+| Title/Page | `src/components/ui/PageTitle.tsx` | 2026-11-18 | 제목 + 부제 |
+| List/Summary Item | `src/components/ui/SummaryItem.tsx` | 2026-11-18 | 위 구분선 + "이름 ... 값" |
+| Input/Field, Input/Field Group | `src/components/ui/InputField.tsx` | 2026-11-18 | `InputFieldGroup`(children) + `InputField`(selected). 누르는 동작 없음 |
+| Card/Option | `src/components/ui/OptionCard.tsx` | 2026-11-18 | 고르기 카드. 체크는 `Checkbox`. 아래 칸(Show Place)은 children |
+| List/Place Row | `src/components/ui/PlaceRow.tsx` | 2026-11-18 | Selected / Search. Proposal은 아직 만들지 않음 |
+| Calendar/Range, Date Cell/Range | `src/components/ui/RangeCalendar.tsx` | 2026-11-18 | 달 넘기기 포함. 계산은 `src/lib/monthGrid.ts`(달 칸), `src/lib/dateRange.ts`(범위). 칸 상태에 single(원만) 추가 |
+| Summary/Create | `src/components/plan-create/CreateSummary.tsx` | 2026-11-18 | 답한 값만 넘긴다. 어떤 값을 보일지는 `src/lib/planDraft.ts`의 `summaryOf` |
+| Card/Summary | `src/components/plan-create/PlanSummaryCard.tsx` | 2026-11-18 | `NewPlan`, host, onEdit |

@@ -2,13 +2,18 @@
 // 날짜는 부르는 시각(now) 기준으로 계산해서, 언제 열어도 "오늘의 약속"이 보인다.
 import type { Plan, PlanMember } from '@/api/plans';
 
+import { MOCK_ME } from './me';
+
 // 개발 중 빈 홈을 보려면 true로 바꾼다. 약속 목록이 빈 배열로 온다.
 export const MOCK_EMPTY_PLANS = false;
 
 const member = (id: string, name: string): PlanMember => ({ id, name, avatarUrl: null });
 
+// 가짜 초대 링크의 앞부분. 실제 형식은 미정이다(docs/open-questions.md).
+const MOCK_INVITE_BASE = 'https://example.com/moa/join/';
+
 const MEMBERS = [
-  member('m1', '나해진'),
+  MOCK_ME,
   member('m2', '김민수'),
   member('m3', '이서연'),
   member('m4', '박지훈'),
@@ -29,9 +34,21 @@ function inTenMinutesToday(now: Date): string {
   return new Date(Math.min(tenMinutesLater.getTime(), lastMinuteToday.getTime())).toISOString();
 }
 
+// createPlan으로 만든 약속. 앱을 다시 켜면 사라진다.
+const createdPlans: Plan[] = [];
+
+export function addMockPlan(plan: Plan) {
+  createdPlans.unshift(plan);
+}
+
+export function mockInviteLink(planId: string): string {
+  return `${MOCK_INVITE_BASE}${planId}`;
+}
+
 export function createMockPlans(now: Date): Plan[] {
-  if (MOCK_EMPTY_PLANS) return [];
+  if (MOCK_EMPTY_PLANS) return [...createdPlans];
   return [
+    ...createdPlans,
     {
       id: 'plan-today',
       title: '캡스톤 회의',

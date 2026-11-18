@@ -1,7 +1,7 @@
 // 약속 홈 (피그마 02 Home / Home). 약속 목록을 가져와 카드에 연결만 한다.
 // 어떤 약속을 어디에 둘지, 라벨과 날짜 글자는 src/lib/의 함수가 정한다.
-import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 
 import { getPlans, type Plan } from '@/api/plans';
@@ -24,11 +24,14 @@ type Loaded =
 export default function Home() {
   const [loaded, setLoaded] = useState<Loaded>({ state: 'loading' });
 
-  useEffect(() => {
-    getPlans()
-      .then((plans) => setLoaded({ state: 'done', plans, now: new Date() }))
-      .catch(() => setLoaded({ state: 'error' }));
-  }, []);
+  // 화면에 돌아올 때마다 다시 불러온다(약속을 만들고 돌아오면 새 약속이 보이게). 불러오는 동안은 앞의 목록을 그대로 둔다.
+  useFocusEffect(
+    useCallback(() => {
+      getPlans()
+        .then((plans) => setLoaded({ state: 'done', plans, now: new Date() }))
+        .catch(() => setLoaded({ state: 'error' }));
+    }, []),
+  );
 
   return (
     <View className="flex-1 bg-gray-10">
