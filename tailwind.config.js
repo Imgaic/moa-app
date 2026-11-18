@@ -24,7 +24,10 @@ module.exports = {
         black: '#000000',
         red: '#AF2E36',
         yellow: '#EDC112',
-        kakao: '#FEE500',
+        kakao: {
+          DEFAULT: '#FEE500',
+          logo: '#191919',
+        },
         naver: '#03A94D',
         google: '#FFFFFF',
       },
