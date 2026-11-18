@@ -1,6 +1,7 @@
 // 약속 허브 (피그마 05 Hub). 링크와 홈 카드가 항상 여기로 온다.
-// 이 화면은 약속, 제안, 후보를 api로 가져와, 위의 머리(이름과 조건 줄)를 그리고, 상태에 맞는 내용 컴포넌트를 고른다.
+// 이 화면은 약속, 제안, 후보를 api로 가져와 상태에 맞는 내용 컴포넌트를 고른다.
 // 상태별 내용은 src/components/plan-hub/에 있다: 모집 중, 추천 나옴(투표), 확정(임시 화면, T4).
+// 고정되는 것은 상단 바(뒤로, 공유)뿐이다. 머리(약속 이름과 조건 줄)는 내용에 넘겨 함께 스크롤되게 한다.
 // 확정 뒤 처음 들어오면 확정 완료 화면(ConfirmedNotice)을 허브 위에 덮는다(T5). 라우트가 아니라 덮개로 한 이유:
 // "처음 한 번만"을 허브가 약속을 불러오는 자리 한 곳에서 판단하고 기록할 수 있고, 뒤로 가기 기록에 남지 않는다.
 // 지난 약속은 홈에서 내려가 이 화면에 올 일이 거의 없어 확정과 같은 내용을 보여준다.
@@ -24,14 +25,10 @@ import { ConfirmedContent } from '@/components/plan-hub/ConfirmedContent';
 import { ConfirmedNotice } from '@/components/plan-hub/ConfirmedNotice';
 import { RecommendedContent } from '@/components/plan-hub/RecommendedContent';
 import { LoadStatus } from '@/components/ui/LoadStatus';
-import { PageTitle } from '@/components/ui/PageTitle';
 import { TopBar } from '@/components/ui/TopBar';
 import { confirm, notify, shareLink } from '@/lib/dialogs';
 import { shouldShowConfirmedNotice } from '@/lib/confirmedNotice';
 import { conditionText, proposedByText } from '@/lib/hubText';
-
-// 피그마 기준 위치(2026-11-18). 상단 바 아래 20에 제목.
-const TITLE_TOP = 20;
 
 type Loaded =
   | { state: 'loading' }
@@ -89,12 +86,7 @@ export default function PlanHub() {
       {loaded.state !== 'done' ? (
         <LoadStatus state={loaded.state} errorText="약속을 불러오지 못했어요" missingText="약속을 찾을 수 없어요" />
       ) : (
-        <>
-          <View className="px-[32px]" style={{ paddingTop: TITLE_TOP }}>
-            <PageTitle title={loaded.plan.title} subtitle={conditionText(loaded.plan)} />
-          </View>
-          <HubContent {...loaded} onChanged={load} />
-        </>
+        <HubContent {...loaded} onChanged={load} />
       )}
       {noticeOpen && loaded.state === 'done' && loaded.plan.confirmed ? (
         <ConfirmedNotice
@@ -119,9 +111,11 @@ type HubContentProps = {
 // 약속의 상태에 맞는 내용을 고른다.
 function HubContent({ plan, proposals, candidates, myId, onChanged }: HubContentProps) {
   const isHost = plan.hostId === myId;
+  const head = { title: plan.title, conditions: conditionText(plan) };
   if (plan.status === 'recommended') {
     return (
       <RecommendedContent
+        {...head}
         candidates={candidates}
         members={plan.members}
         myId={myId}
@@ -135,6 +129,7 @@ function HubContent({ plan, proposals, candidates, myId, onChanged }: HubContent
   if (plan.confirmed) {
     return (
       <ConfirmedContent
+        {...head}
         confirmed={plan.confirmed}
         durationMinutes={plan.durationMinutes}
         members={plan.members}
@@ -146,6 +141,7 @@ function HubContent({ plan, proposals, candidates, myId, onChanged }: HubContent
   const params = { planId: plan.id };
   return (
     <CollectingContent
+      {...head}
       members={plan.members}
       proposals={proposals.map((proposal) => ({
         id: proposal.id,

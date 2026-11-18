@@ -18,6 +18,7 @@ import { LoadStatus } from '@/components/ui/LoadStatus';
 import { PageTitle } from '@/components/ui/PageTitle';
 import { TopBar } from '@/components/ui/TopBar';
 import { usePlaceSearch } from '@/hooks/usePlaceSearch';
+import { useScrollEndPadding } from '@/hooks/useScrollEndPadding';
 import { canSave, hasUnsavedChanges } from '@/lib/availabilityGroups';
 import { confirm, notify } from '@/lib/dialogs';
 import { toDateKey } from '@/lib/monthGrid';
@@ -163,13 +164,14 @@ function InputStep({ range, editing, onChange, onBack, footer }: InputStepProps)
 // 출발지 찾기. 피그마에 화면이 없어 장소 제안과 같은 임시 모양이고 제목과 부제는 임시 문구다.
 function OriginSearch({ onBack, onPick }: { onBack: () => void; onPick: Parameters<typeof PlaceSearch>[0]['onPick'] }) {
   const { query, changeQuery, places } = usePlaceSearch();
+  const scrollEndPadding = useScrollEndPadding();
   return (
     <KeyboardAvoidingView behavior="padding" className="flex-1 bg-gray-10">
       <TopBar type="back" onBack={onBack} />
       <ScrollView
         className="flex-1"
-        contentContainerClassName="px-[32px] pb-[24px] gap-[46px]"
-        contentContainerStyle={{ paddingTop: TITLE_TOP }}
+        contentContainerClassName="px-[32px] gap-[46px]"
+        contentContainerStyle={{ paddingTop: TITLE_TOP, paddingBottom: scrollEndPadding }}
         keyboardShouldPersistTaps="handled">
         <PageTitle title="출발지 찾기" subtitle="이 날짜에 출발할 곳을 검색하세요" />
         <PlaceSearch query={query} onChangeQuery={changeQuery} places={places} onPick={onPick} />

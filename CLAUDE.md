@@ -68,7 +68,7 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | Avatar | `src/components/ui/Avatar.tsx` | 2026-11-18 | 프로필 동그라미 하나(`Avatar`: name, photo, size, 테두리). 사진이 없으면 이름 뒤 두 글자(`src/lib/avatarText.ts`). 카메라 버튼, Avatar/Member, Avatar/Group, Avatar/Map Pin은 쓰는 화면이 없어 지움(쓰일 때 `Avatar`를 쓰는 별도 컴포넌트로). Character 세트는 만들지 않음 |
 | Tooltip/Recent, Badge/Progress | `src/components/ui/Badge.tsx` | 2026-11-18 | `Tooltip`(label), `ProgressBadge`(count, label) |
 | Card/Plan | `src/components/home/PlanCard.tsx` | 2026-11-18 | `plan`, `now`, `onPress`. 라벨은 `src/lib/planLabel.ts`. 확정 전이면 시각·장소 "미정". 얼굴은 앞의 2명 |
-| Card/Today | `src/components/home/TodayCard.tsx` | 2026-11-18 | 확정된 오늘 약속(`ConfirmedPlan`)만 받는다. 얼굴 4명 + "외 N명". 얼굴 링(진척도)은 그리지 않음 |
+| Card/Today | `src/components/home/TodayCard.tsx` | 2026-11-18 | 확정된 오늘 약속(`ConfirmedPlan`)만 받는다. 얼굴 4명 + "외 N명". 좁은 화면에서는 들어가는 만큼만 그리고 나머지는 "외 N명"에(`src/lib/fittingCount.ts`). 얼굴 링(진척도)은 그리지 않음 |
 | Title/Page | `src/components/ui/PageTitle.tsx` | 2026-11-18 | 제목 + 부제 |
 | List/Summary Item | `src/components/ui/SummaryItem.tsx` | 2026-11-18 | 위 구분선 + "이름 ... 값" |
 | Input/Field, Input/Field Group | `src/components/ui/InputField.tsx` | 2026-11-18 | `InputFieldGroup`(children) + `InputField`(selected). 누르는 동작 없음 |
@@ -105,6 +105,6 @@ Expo 공통 규칙(문서 확인, `npx expo install`, 라우트 위치, CNG)은 
 | 09 Confirm / Done (Illustration/Done 포함) | `src/components/plan-hub/ConfirmedNotice.tsx` | 2026-11-18 | 허브 위에 덮는 화면. 2.5초 뒤 또는 누르면 닫힘. 보일지는 `src/lib/confirmedNotice.ts` |
 | (확정 허브, 임시 T4) | `src/components/plan-hub/ConfirmedContent.tsx` | 2026-11-18 | 디자인 없음. List/Summary Item + List/Member Row로 일시, 시간, 장소, 참가자 |
 | List/Terms Item | `src/components/ui/TermsItem.tsx` | 2026-11-18 | title, description, checked, onPress, showArrow. 줄 전체를 누르면 체크. 화살표는 누를 수 없는 표시(약관 내용 화면 없음). 규칙은 `src/lib/termsAgreement.ts`, 항목은 `src/constants/terms.ts` |
-| (제목 + 본문 + 아래 버튼 화면 틀) | `src/components/ui/StepLayout.tsx` | 2026-11-18 | 피그마 컴포넌트 아님. 참여, 약관, 프로필 화면이 같이 쓴다. title, subtitle, bodyTop, button, children |
+| (제목 + 본문 + 아래 버튼 화면 틀) | `src/components/ui/StepLayout.tsx` | 2026-11-18 | 피그마 컴포넌트 아님. 참여, 약관, 프로필 화면과 약속 허브의 세 내용이 같이 쓴다. title, subtitle, bodyTop, button(없으면 본문이 화면 끝까지, 아래 여백은 `src/hooks/useScrollEndPadding.ts`), children. 제목도 함께 스크롤된다 |
 | (불러오는 중 스피너, 못 불러옴 문구) | `src/components/ui/LoadStatus.tsx` | 2026-11-18 | 피그마 컴포넌트 아님(임시 모양). state(loading/error/missing), errorText, missingText. 홈, 허브, 내 입력, 참여 화면이 같이 쓴다. 불러오기 자체는 화면마다 따로 |
 | (내 입력의 단계 내용) | `src/components/my-input/DatePickStep.tsx`(큰 달력), `src/components/my-input/TimeCardStep.tsx`(작은 달력 + 시간 카드) | 2026-11-18 | 상단 바, 스크롤, 저장 버튼은 화면이 두른다. 값이 바뀌는 규칙은 `src/lib/myInputEditing.ts` |
