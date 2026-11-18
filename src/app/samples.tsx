@@ -24,8 +24,10 @@ import { SocialButton } from '@/components/ui/SocialButton';
 import { SummaryItem } from '@/components/ui/SummaryItem';
 import { TabBar, TabItem, type TabIcon } from '@/components/ui/TabBar';
 import { TextField } from '@/components/ui/TextField';
+import { TimeBar } from '@/components/ui/TimeBar';
 import { Toggle } from '@/components/ui/Toggle';
 import { TopBar } from '@/components/ui/TopBar';
+import { clockText } from '@/lib/clockTime';
 import { EMPTY_RANGE, pickRangeDate } from '@/lib/dateRange';
 import { toDateKey } from '@/lib/monthGrid';
 
@@ -129,6 +131,7 @@ export default function TokenSamples() {
   const [tab, setTab] = useState<TabIcon>('home');
   const [option, setOption] = useState<'recommend' | 'fixed'>('fixed');
   const [range, setRange] = useState(EMPTY_RANGE);
+  const [barTime, setBarTime] = useState({ start: 10 * 60, end: 16 * 60 });
 
   return (
     <SafeAreaView className="flex-1 bg-gray-10">
@@ -405,6 +408,17 @@ export default function TokenSamples() {
             today={toDateKey(new Date())}
             onPickDate={(key) => setRange(pickRangeDate(range, key))}
           />
+        </Section>
+
+        <Section
+          title={`Input/Time Bar · 손잡이 끌기, 끝에서 밀림, 두 손가락 확대(웹은 휠) · ${clockText(barTime.start)} ~ ${clockText(barTime.end)}`}>
+          <View className="rounded-[16px] bg-white p-[20px]">
+            <TimeBar
+              startMinutes={barTime.start}
+              endMinutes={barTime.end}
+              onChange={(start, end) => setBarTime({ start, end })}
+            />
+          </View>
         </Section>
       </ScrollView>
     </SafeAreaView>

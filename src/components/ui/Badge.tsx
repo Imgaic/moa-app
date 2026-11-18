@@ -59,3 +59,17 @@ export function ProgressBadge({ count, label }: ProgressBadgeProps) {
     </View>
   );
 }
+
+// 피그마 badge(회색 알약, 예: 6시간 가능). 출발지 줄 오른쪽(휠 안)과 시간 막대 아래(막대 안)에 쓴다.
+// 글자 10은 토큰에 없는 크기라 style로 넣었다.
+const GRAY_BADGE_FONT_SIZE = 10;
+
+export function GrayBadge({ label }: { label: string }) {
+  return (
+    <View className="rounded-full bg-gray-10 px-[10px] py-[5px]">
+      <Text className="font-pretendard text-gray-60" style={{ fontSize: GRAY_BADGE_FONT_SIZE }}>
+        {label}
+      </Text>
+    </View>
+  );
+}
