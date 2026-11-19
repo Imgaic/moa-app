@@ -1,8 +1,9 @@
-// 약속 홈 (피그마 02 Home / Home). 약속 목록을 가져와 카드에 연결만 한다.
+// 약속 홈 (피그마 02 Home / Home, 약속이 없으면 Home - Empty). 약속 목록을 가져와 카드에 연결만 한다.
 // 어떤 약속을 어디에 둘지, 라벨과 날짜 글자는 src/lib/의 함수가 정한다.
+import { Image } from 'expo-image';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import { getPlans, type Plan } from '@/api/plans';
 import { PlanCard } from '@/components/home/PlanCard';
@@ -15,6 +16,18 @@ import { splitHomePlans } from '@/lib/homePlans';
 const CONTENT_TOP = 14.5;
 const SECTION_TOP = 28;
 const LIST_GAP = 11;
+
+// 빈 홈(피그마 Home - Empty, 2026-11-19). 그림은 화면보다 넓다(402 화면에 538). 그림자가 화면 가장자리까지 번지게
+// 너비를 화면 너비에 비례시키고, 넓은 화면(웹)에서 끝없이 커지지 않게 시안 크기에서 멈춘다.
+// 그림은 임시일 수 있다. 바꿀 때는 파일과 비율(MASCOT_ASPECT)만 바꾼다.
+const MASCOT = require('@/assets/images/home/empty-mascot.png');
+const MASCOT_WIDTH = '134%';
+const MASCOT_MAX_WIDTH = 538;
+const MASCOT_ASPECT = 538 / 222;
+const MASCOT_TO_TITLE = 83;
+const TITLE_GAP = 9;
+const TITLE_TO_BUTTON = 24;
+const BUTTON_SHADOW = '0px 0px 4.5px 0px rgba(0, 0, 0, 0.15)';
 
 type Loaded =
   | { state: 'loading' }
@@ -40,9 +53,8 @@ export default function Home() {
       {loaded.state !== 'done' ? (
         <LoadStatus state={loaded.state} errorText="약속을 불러오지 못했어요" />
       ) : loaded.plans.length === 0 ? (
-        // 임시 빈 상태(docs/open-questions.md T1): 상단 바와 탭 바만 보인다. 빈 상태 디자인이 나오면 바꾼다.
         // 개발 중에는 src/mocks/plans.ts의 MOCK_EMPTY_PLANS를 true로 바꿔 본다.
-        null
+        <EmptyHome onCreate={() => router.push('/plans/new')} />
       ) : (
         <HomePlans plans={loaded.plans} now={loaded.now} />
       )}
@@ -74,6 +86,36 @@ function HomePlans({ plans, now }: { plans: Plan[]; now: Date }) {
           </View>
         </>
       ) : null}
+    </ScrollView>
+  );
+}
+
+// 가운데 정렬이지만 화면 높이가 모자라면(작은 폰) 스크롤된다. 그림 너비(%)가 화면 너비 기준이 되게 바깥에는 좌우 여백을 두지 않는다.
+function EmptyHome({ onCreate }: { onCreate: () => void }) {
+  return (
+    <ScrollView contentContainerClassName="flex-grow items-center justify-center py-[24px]">
+      <Image
+        source={MASCOT}
+        contentFit="contain"
+        accessible={false}
+        style={{ width: MASCOT_WIDTH, maxWidth: MASCOT_MAX_WIDTH, aspectRatio: MASCOT_ASPECT }}
+      />
+      <View className="items-center px-[24px]" style={{ marginTop: MASCOT_TO_TITLE, gap: TITLE_GAP }}>
+        <Text accessibilityRole="header" className="font-pretendard text-h2 text-gray-50 text-center">
+          아직 약속이 없어요
+        </Text>
+        <Text className="font-pretendard text-caption-14 text-gray-30 text-center">
+          약속을 만들고 여러 사람과의 약속을 조율해요
+        </Text>
+      </View>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="약속 만들기"
+        onPress={onCreate}
+        className="rounded-full bg-white px-[16px] py-[10px] active:opacity-70"
+        style={{ marginTop: TITLE_TO_BUTTON, boxShadow: BUTTON_SHADOW }}>
+        <Text className="font-pretendard text-body2 font-bold text-gray-50">약속 만들기</Text>
+      </Pressable>
     </ScrollView>
   );
 }
