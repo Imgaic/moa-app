@@ -60,7 +60,7 @@ export function ProgressBadge({ count, label }: ProgressBadgeProps) {
   );
 }
 
-// 피그마 badge(회색 알약, 예: 6시간 가능). 출발지 줄 오른쪽(휠 안)과 시간 막대 아래(막대 안)에 쓴다.
+// 피그마 badge(회색 알약, 예: 6시간 가능). 출발지 줄 오른쪽(휠 안)과 시각 줄 오른쪽(막대 안)에 쓴다.
 // 글자 10은 토큰에 없는 크기라 style로 넣었다.
 const GRAY_BADGE_FONT_SIZE = 10;
 
