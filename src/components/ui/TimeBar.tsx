@@ -8,8 +8,8 @@ import { dragHandle, LAST_MINUTE } from '@/lib/timeBarDrag';
 import { snapStepOf, tickMinutes, tickText, xOfMinutes } from '@/lib/timeBarScale';
 import { initialWindow, revealMinutes, windowSpan } from '@/lib/timeBarWindow';
 
-// 피그마 Input/Time Bar (2026-11-18 기준). 디자인이 완성 전이라 수치가 바뀔 수 있다.
-// 눈금 글자, 회색 트랙, 고른 구간의 파란 막대, 흰 원 손잡이 둘. 하루(0~24시) 중 "창"만 보이고 끌기와 확대로 창이 바뀐다.
+// 피그마 Input/Time Bar (2026-11-19 기준). 디자인이 완성 전이라 수치가 바뀔 수 있다.
+// 회색 트랙, 고른 구간의 파란 막대, 흰 원 손잡이 둘, 그 아래 6에 눈금 글자. 하루(0~24시) 중 "창"만 보이고 끌기와 확대로 창이 바뀐다.
 // 이 파일은 그리기만 한다. 손가락 동작은 src/hooks/useTimeBarGestures.ts, 계산은 src/lib/timeBar*.ts가 맡는다.
 // 화면 낭독기와 키보드는 끌 수 없어, 시작과 종료를 한 간격씩 올리고 내리는 보이지 않는 자리(EdgeAdjuster)를 둔다.
 const LABEL_WIDTH = 38;
@@ -72,18 +72,6 @@ export function TimeBar({ startMinutes, endMinutes, onChange }: TimeBarProps) {
         accessibilityLabel="시간 막대"
         onLayout={(event) => setTrackWidth(event.nativeEvent.layout.width)}
         style={{ gap: LABEL_GAP }}>
-        <View aria-hidden style={{ height: LABEL_HEIGHT }}>
-          {width > 0 &&
-            tickMinutes(window, width, labelOverflow).map((minutes) => (
-              <Text
-                key={minutes}
-                selectable={false}
-                className="absolute text-center font-pretendard text-caption-12 text-black"
-                style={{ left: xOf(minutes) - LABEL_WIDTH / 2, width: LABEL_WIDTH }}>
-                {tickText(minutes)}
-              </Text>
-            ))}
-        </View>
         <View aria-hidden className="rounded-full bg-gray-10" style={{ height: TRACK_HEIGHT }}>
           {width > 0 && (
             <>
@@ -100,6 +88,18 @@ export function TimeBar({ startMinutes, endMinutes, onChange }: TimeBarProps) {
               <Knob x={endX} visible={isVisible(endX, width)} />
             </>
           )}
+        </View>
+        <View aria-hidden style={{ height: LABEL_HEIGHT }}>
+          {width > 0 &&
+            tickMinutes(window, width, labelOverflow).map((minutes) => (
+              <Text
+                key={minutes}
+                selectable={false}
+                className="absolute text-center font-pretendard text-caption-12 text-black"
+                style={{ left: xOf(minutes) - LABEL_WIDTH / 2, width: LABEL_WIDTH }}>
+                {tickText(minutes)}
+              </Text>
+            ))}
         </View>
         <EdgeAdjuster
           label="시작 시각"
