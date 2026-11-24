@@ -6,6 +6,8 @@
 
 > **2026-11-13 변경:** 사용자 흐름을 `docs/user-flow.md`에서 다시 정했다. 이 문서의 2.1 중 `plans/` 라우트, 3장(사용자 흐름), 5.4(가짜 데이터의 모양), 1장의 약속 초대 화면은 그 문서가 대체한다. 약속 허브 화면이 생기면서 `dates.tsx`, `place.tsx`, `plans/new/invite.tsx`는 쓰지 않는다.
 
+> **2026-11-18 변경(feat/onboarding):** 2.1의 `(auth)` 묶음은 `src/app/onboarding/`(주소 `/onboarding/login`, `/onboarding/terms`, `/onboarding/profile`)로 만들었다. `(auth)/profile.tsx`의 주소 `/profile`이 탭의 내 정보와 겹쳐서다. 6장의 `useSessionStore` 대신 로그인 단계 하나만 든 `src/stores/authStage.ts`를 두었다. 자세한 것은 `docs/open-questions.md` 2장의 feat/onboarding 항목.
+
 ## 0. 읽는 법
 
 **표시**

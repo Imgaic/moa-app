@@ -1,3 +1,6 @@
+> **이 레포는 옮겨졌다 (2026-11-23).**
+> 2026-11-23부터 개발은 팀 레포(비공개)의 `app/` 폴더에서 이어진다. 이 레포는 그 전까지의 커밋과 PR 기록으로 보관한다.
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
